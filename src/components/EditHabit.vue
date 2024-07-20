@@ -15,17 +15,21 @@
   const habitDescription = ref(habit?.description || "");
 
   const submitEdit = () => {
-    habitStore.updateHabit(route.params.id, {
+    habitStore.updateHabit(habit.id, {
       ...habit,
       name: habitName.value,
       description: habitDescription.value,
     });
-    router.push("/");
+    router.back();
+  };
+
+  const goBack = () => {
+    router.back();
   };
 
   onMounted(() => {
     if (!habit) {
-      router.push("/");
+      router.back();
     }
   });
 </script>
@@ -63,7 +67,15 @@
             class="scrollable-container mt-1 block w-full h-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           ></textarea>
         </div>
-        <div>
+        <div class="flex gap-5">
+          <button
+            @click="goBack"
+            tabindex="3"
+            class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+          >
+            <span class="mx-auto">Go Back</span>
+          </button>
+
           <button
             type="submit"
             class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

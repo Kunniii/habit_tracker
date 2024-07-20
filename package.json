@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.13",
     "@vueuse/core": "^10.11.0",
     "date-fns": "^3.6.0",
     "lucide-vue-next": "^0.411.0",
+    "marked": "^13.0.2",
     "pinia": "^2.1.7",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0"

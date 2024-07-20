@@ -16,7 +16,11 @@
       datesDone: [],
     };
     habitStore.addHabit(newHabit);
-    router.push("/");
+    router.back();
+  };
+
+  const goBack = () => {
+    router.back();
   };
 </script>
 
