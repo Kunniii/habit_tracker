@@ -3,7 +3,7 @@
   import { useRoute, useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
   import { format } from "date-fns";
-  import { SquarePen, Trash2, X } from "lucide-vue-next";
+  import { SquarePen, Trash2, X, Flame } from "lucide-vue-next";
   import { marked } from "marked";
 
   const route = useRoute();
@@ -105,12 +105,41 @@
         </div>
       </div>
       <div
-        class="mb-4 prose prose-neutral prose-invert prose-h1:text-2xl prose-h2:text-1xl prose-h3:text-xl text-white max-h-[45vh] overflow-scroll overflow-x-hidden bg-gray-900 p-4 rounded-lg"
+        class="prose prose-neutral prose-invert prose-h1:text-2xl prose-h2:text-1xl prose-h3:text-xl text-white max-h-[45vh] overflow-scroll overflow-y-auto overflow-x-hidden bg-gray-900 p-4 rounded-lg"
         v-html="renderedDescription"
       ></div>
-      <h2 class="text-xl font-semibold mb-2">Streak</h2>
-      <p class="mb-4">Current Streak: {{ currentStreak }} days</p>
-      <p class="mb-4">Longest Streak: {{ longestStreak }} days</p>
+
+      <table
+        class="min-w-full bg-slate-700 text-slate-300 rounded-lg overflow-hidden text-center my-4"
+      >
+        <tbody>
+          <tr>
+            <td class="px-4 py-2 border-b border-slate-600">Current</td>
+            <td class="px-4 py-2 border-b border-slate-600">Longest</td>
+          </tr>
+          <tr class="">
+            <td class="px-4 py-2 text-xl font-black">
+              <span class="flex items-center justify-center gap-2"
+                ><span>{{ currentStreak }}</span
+                ><Flame
+                  :stroke-width="3"
+                  :class="currentStreak > 0 ? 'fill-orange-400 text-orange-500' : ''"
+                />
+              </span>
+            </td>
+            <td class="px-4 py-2 text-xl font-black">
+              <span class="flex items-center justify-center gap-2"
+                ><span>{{ longestStreak }}</span
+                ><Flame
+                  :stroke-width="3"
+                  :class="currentStreak > 0 ? 'fill-orange-400 text-orange-500' : ''"
+                />
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
       <div class="flex gap-5">
         <button
           @click="goBack"

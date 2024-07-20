@@ -2,7 +2,7 @@
   import { defineProps, computed } from "vue";
   import { useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
-  import { SquarePen } from "lucide-vue-next";
+  import { SquarePen, Flame } from "lucide-vue-next";
   import { format } from "date-fns";
 
   const router = useRouter();
@@ -72,7 +72,7 @@
 
 <template>
   <div class="bg-gray-800 shadow-md rounded-lg p-4">
-    <div class="flex justify-between items-center mb-2">
+    <div class="flex justify-between items-center">
       <h2 class="text-lg font-bold text-white">{{ habit.name }}</h2>
       <button
         title="Edit"
@@ -83,23 +83,47 @@
       </button>
     </div>
 
-    <p class="text-gray-400 overflow-hidden text-ellipsis whitespace-pre h-12 my-3">
-      {{ habit.description }}
-    </p>
-
-    <p class="mb-4">Current Streak: {{ currentStreak }} days</p>
-    <p class="mb-4">Longest Streak: {{ longestStreak }} days</p>
+    <table
+      class="min-w-full bg-slate-700 text-slate-300 rounded-lg overflow-hidden text-center my-5"
+    >
+      <tbody>
+        <tr>
+          <td class="px-4 py-2 border-b border-slate-600">Current</td>
+          <td class="px-4 py-2 border-b border-slate-600">Longest</td>
+        </tr>
+        <tr class="">
+          <td class="px-4 py-2 text-xl font-black">
+            <span class="flex items-center justify-center gap-2"
+              ><span>{{ currentStreak }}</span
+              ><Flame
+                :stroke-width="3"
+                :class="currentStreak > 0 ? 'fill-orange-400 text-orange-500' : ''"
+              />
+            </span>
+          </td>
+          <td class="px-4 py-2 text-xl font-black">
+            <span class="flex items-center justify-center gap-2"
+              ><span>{{ longestStreak }}</span
+              ><Flame
+                :stroke-width="3"
+                :class="currentStreak > 0 ? 'fill-orange-400 text-orange-500' : ''"
+              />
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
     <div class="flex gap-5">
       <button
         @click="viewDetails"
-        class="transition transform hover:scale-105 w-full mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        class="transition transform hover:scale-105 w-full inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
         <span class="mx-auto">View Details</span>
       </button>
       <button
         @click="markAsDone"
-        class="transition transform hover:scale-105 w-full mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        class="transition transform hover:scale-105 w-full inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
         <span class="mx-auto">Mark as Done</span>
       </button>

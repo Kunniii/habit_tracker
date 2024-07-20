@@ -14,14 +14,15 @@
   const habit = computedHabit.value;
   const habitName = ref(habit?.name || "");
   const habitDescription = ref(habit?.description || "");
+  const habitID = Number(route.params.id);
 
   const submitEdit = () => {
-    habitStore.updateHabit(habit.id, {
+    habitStore.updateHabit(habitID, {
       ...habit,
       name: habitName.value,
       description: habitDescription.value,
     });
-    router.push(`/habit/${habit.id}`);
+    router.push(`/habit/${habitID}`);
   };
 
   const goBack = () => {
