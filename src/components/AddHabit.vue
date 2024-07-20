@@ -43,7 +43,7 @@
             id="name"
             v-model="habitName"
             required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
@@ -55,7 +55,7 @@
           <textarea
             id="description"
             v-model="habitDescription"
-            class="scrollable-container mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="scrollable-container mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           ></textarea>
         </div>
         <div>
