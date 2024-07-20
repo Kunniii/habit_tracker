@@ -2,7 +2,7 @@
   import { defineProps, computed } from "vue";
   import { useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
-  import { Settings2 } from "lucide-vue-next";
+  import { SquarePen } from "lucide-vue-next";
   import { format } from "date-fns";
 
   const router = useRouter();
@@ -75,10 +75,11 @@
     <div class="flex justify-between items-center mb-2">
       <h2 class="text-lg font-bold text-white">{{ habit.name }}</h2>
       <button
+        title="Edit"
         @click="editHabit"
         class="text-gray-400 hover:text-white transition hover:shadow-md"
       >
-        <Settings2 color="white" />
+        <SquarePen />
       </button>
     </div>
 

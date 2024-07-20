@@ -2,6 +2,7 @@
   import { ref, onMounted, computed } from "vue";
   import { useRoute, useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
+  import { Trash2, X } from "lucide-vue-next";
 
   const route = useRoute();
   const router = useRouter();
@@ -20,11 +21,20 @@
       name: habitName.value,
       description: habitDescription.value,
     });
-    router.back();
+    router.push(`/habit/${habit.id}`);
   };
 
   const goBack = () => {
     router.back();
+  };
+
+  const goHome = () => {
+    router.push("/");
+  };
+
+  const deleteHabit = () => {
+    habitStore.deleteHabit(Number(habitID));
+    goHome();
   };
 
   onMounted(() => {
@@ -36,7 +46,25 @@
 <template>
   <div class="container mx-auto p-4">
     <div class="max-w-lg mx-auto bg-gray-800 shadow-md rounded-lg p-6">
-      <h1 class="text-2xl font-bold mb-4 text-white">Update Habit</h1>
+      <div class="flex justify-between items-center mb-10">
+        <h1 class="text-2xl font-bold text-white">Update Habit</h1>
+        <div class="flex gap-2">
+          <button
+            title="Delete"
+            @click="deleteHabit"
+            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-rose-500 rounded-lg p-1 transition hover:shadow-md"
+          >
+            <Trash2 />
+          </button>
+          <button
+            title="Close"
+            @click="goBack"
+            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-slate-500 rounded-lg p-1 transition hover:shadow-md"
+          >
+            <X />
+          </button>
+        </div>
+      </div>
       <form
         @submit.prevent="submitEdit"
         class="space-y-4"
@@ -71,14 +99,20 @@
           <button
             @click="goBack"
             tabindex="3"
-            class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+            class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <span class="mx-auto">Go Back</span>
           </button>
-
+          <button
+            @click="goBack"
+            tabindex="3"
+            class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-rose-600 text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+          >
+            <span class="mx-auto">Delete</span>
+          </button>
           <button
             type="submit"
-            class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             <span class="mx-auto">Save Changes</span>
           </button>

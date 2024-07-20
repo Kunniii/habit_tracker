@@ -3,7 +3,7 @@
   import { useRoute, useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
   import { format } from "date-fns";
-  import { Settings2 } from "lucide-vue-next";
+  import { SquarePen, Trash2, X } from "lucide-vue-next";
   import { marked } from "marked";
 
   const route = useRoute();
@@ -16,9 +16,7 @@
     router.back();
   }
 
-  const renderedDescription = ref("");
-
-  renderedDescription.value = marked(habit.value.description);
+  const renderedDescription = ref(marked(habit.value.description));
 
   const markAsDone = () => {
     const today = format(new Date(), "yyyy-MM-dd");
@@ -31,8 +29,17 @@
     router.back();
   };
 
+  const goHome = () => {
+    router.push("/");
+  };
+
   const editHabit = () => {
     router.push(`/edit/${habitID}`);
+  };
+
+  const deleteHabit = () => {
+    habitStore.deleteHabit(Number(habitID));
+    goHome();
   };
 
   const currentStreak = computed(() => {
@@ -73,12 +80,29 @@
     <div class="max-w-lg mx-auto bg-gray-800 shadow-md rounded-lg p-6">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">{{ habit.name }}</h1>
-        <button
-          @click="editHabit"
-          class="text-gray-400 hover:text-white transition hover:shadow-md"
-        >
-          <Settings2 color="white" />
-        </button>
+        <div class="flex gap-2">
+          <button
+            title="Edit"
+            @click="editHabit"
+            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-indigo-500 rounded-lg p-1 transition hover:shadow-md"
+          >
+            <SquarePen />
+          </button>
+          <button
+            title="Delete"
+            @click="deleteHabit"
+            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-rose-500 rounded-lg p-1 transition hover:shadow-md"
+          >
+            <Trash2 />
+          </button>
+          <button
+            title="Close"
+            @click="goHome"
+            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-slate-500 rounded-lg p-1 transition hover:shadow-md"
+          >
+            <X />
+          </button>
+        </div>
       </div>
       <div
         class="mb-4 prose prose-neutral prose-invert prose-h1:text-2xl prose-h2:text-1xl prose-h3:text-xl text-white max-h-[45vh] overflow-scroll overflow-x-hidden bg-gray-900 p-4 rounded-lg"

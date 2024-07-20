@@ -2,6 +2,7 @@
   import { computed } from "vue";
   import { useHabitStore } from "../stores/habitStore";
   import HabitCard from "./HabitCard.vue";
+  import NewHabitSkeleton from "./NewHabitSkeleton.vue";
 
   const habitStore = useHabitStore();
   const habits = computed(() => habitStore.habits);
@@ -16,6 +17,7 @@
         :key="habit.id"
         :habitID="habit.id"
       />
+      <NewHabitSkeleton />
     </div>
   </div>
 </template>
