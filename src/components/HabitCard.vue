@@ -77,7 +77,12 @@
 <template>
   <div class="bg-gray-800 shadow-md rounded-lg p-4">
     <div class="flex justify-between items-center">
-      <h2 class="text-lg font-bold text-white">{{ habit.name }}</h2>
+      <h2
+        class="text-lg font-bold text-white hover:underline hover:cursor-pointer"
+        @click="viewDetails"
+      >
+        {{ habit.name }}
+      </h2>
       <div class="flex gap-2">
         <button
           title="Calendar"
