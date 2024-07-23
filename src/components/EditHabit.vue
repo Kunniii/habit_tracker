@@ -67,10 +67,7 @@
           </button>
         </div>
       </div>
-      <form
-        @submit.prevent="submitEdit"
-        class="space-y-4"
-      >
+      <div class="space-y-4">
         <div>
           <label
             for="name"
@@ -106,13 +103,13 @@
             <span class="mx-auto">Go Back</span>
           </button>
           <button
-            type="submit"
+            @click="submitEdit"
             class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             <span class="mx-auto">Save Changes</span>
           </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>

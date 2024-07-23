@@ -176,14 +176,6 @@
         </button>
       </div>
       <h2 class="text-xl font-semibold mt-6 mb-2">History</h2>
-      <!-- <ul>
-        <li
-          v-for="date in habit.datesDone"
-          :key="date"
-        >
-          {{ date }}
-        </li>
-      </ul> -->
 
       <VueCal
         :events="events"
