@@ -3,18 +3,27 @@
   import { useRoute, useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
   import { format } from "date-fns";
-  import { SquarePen, Trash2, X, Flame } from "lucide-vue-next";
+  import { SquarePen, Trash2, X, Flame, CalendarDays } from "lucide-vue-next";
   import { marked } from "marked";
+  import VueCal from "vue-cal";
+  import "vue-cal/dist/vuecal.css";
 
   const route = useRoute();
   const router = useRouter();
   const habitStore = useHabitStore();
   const habitID = route.params.id;
   const habit = computed(() => habitStore.habits.find((habit) => habit.id === Number(habitID)));
+  const events = ref([]);
 
   if (!habit.value) {
     router.back();
   }
+
+  events.value = habit.value.datesDone.map((date) => ({
+    start: format(new Date(date), "yyyy-MM-dd"),
+    end: format(new Date(date), "yyyy-MM-dd"),
+    title: "Done",
+  }));
 
   const renderedDescription = ref(marked(habit.value.description));
 
@@ -30,7 +39,7 @@
   };
 
   const goHome = () => {
-    router.push("/");
+    router.push("/dashboard");
   };
 
   const editHabit = () => {
@@ -40,6 +49,10 @@
   const deleteHabit = () => {
     habitStore.deleteHabit(Number(habitID));
     goHome();
+  };
+
+  const goToCalendar = () => {
+    router.push(`/habit/${habitID}/calendar`);
   };
 
   const currentStreak = computed(() => {
@@ -81,6 +94,13 @@
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">{{ habit.name }}</h1>
         <div class="flex gap-2">
+          <button
+            title="Calendar"
+            @click="goToCalendar"
+            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-indigo-500 rounded-lg p-1 transition hover:shadow-md"
+          >
+            <CalendarDays />
+          </button>
           <button
             title="Edit"
             @click="editHabit"
@@ -156,14 +176,35 @@
         </button>
       </div>
       <h2 class="text-xl font-semibold mt-6 mb-2">History</h2>
-      <ul>
+      <!-- <ul>
         <li
           v-for="date in habit.datesDone"
           :key="date"
         >
           {{ date }}
         </li>
-      </ul>
+      </ul> -->
+
+      <VueCal
+        :events="events"
+        :time="false"
+        :transitions="false"
+        :disable-views="['week', 'day']"
+        hide-view-selector
+        events-count-on-year-view
+        active-view="month"
+        xsmall
+        class="h-96 bg-gray-900"
+      />
     </div>
   </div>
 </template>
+
+<style>
+  .vuecal__cell--has-events {
+    @apply bg-emerald-600;
+  }
+  .vuecal__cell-events-count {
+    display: none;
+  }
+</style>

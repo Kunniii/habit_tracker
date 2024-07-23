@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <nav class="bg-gray-800 px-4 py-2 select-none">
+  <nav class="bg-gray-800 px-4 py-2 select-none sticky top-0 right-0 z-10">
     <div class="container mx-auto flex justify-between items-center">
       <div
         class="text-white text-xl font-bold hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md cursor-pointer"
@@ -12,7 +12,7 @@
       </div>
       <div>
         <RouterLink
-          to="/"
+          to="/dashboard"
           class="text-gray-300 transition hover:bg-indigo-700 hover:text-white px-3 py-2 rounded-md cursor-pointer text-sm font-medium"
         >
           Dashboard

@@ -30,7 +30,7 @@
   };
 
   const goHome = () => {
-    router.push("/");
+    router.push("/dashboard");
   };
 
   const deleteHabit = () => {

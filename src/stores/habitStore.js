@@ -25,9 +25,7 @@ export const useHabitStore = defineStore("habit", {
       }
     },
     getHabitById(id) {
-      console.log(this.habits);
       let habit = this.habits.find((habit) => {
-        console.log(`Checking ${habit.id}`);
         return habit.id === id;
       });
       console.log(habit);

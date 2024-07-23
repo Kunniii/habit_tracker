@@ -1,8 +1,8 @@
 <script setup>
-  import { defineProps, computed } from "vue";
+  import { computed } from "vue";
   import { useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
-  import { SquarePen, Flame } from "lucide-vue-next";
+  import { SquarePen, Flame, CalendarDays } from "lucide-vue-next";
   import { format } from "date-fns";
 
   const router = useRouter();
@@ -22,6 +22,10 @@
 
   const editHabit = () => {
     router.push(`/edit/${props.habitID}`);
+  };
+
+  const goToCalendar = () => {
+    router.push(`/habit/${props.habitID}/calendar`);
   };
 
   const habit = computed(() => habitStore.habits.find((h) => h.id === Number(props.habitID)));
@@ -74,13 +78,22 @@
   <div class="bg-gray-800 shadow-md rounded-lg p-4">
     <div class="flex justify-between items-center">
       <h2 class="text-lg font-bold text-white">{{ habit.name }}</h2>
-      <button
-        title="Edit"
-        @click="editHabit"
-        class="text-gray-400 hover:text-white transition hover:shadow-md"
-      >
-        <SquarePen />
-      </button>
+      <div class="flex gap-2">
+        <button
+          title="Calendar"
+          @click="goToCalendar"
+          class="text-gray-400 hover:text-white hover:scale-105 hover:bg-indigo-500 rounded-lg p-1 transition hover:shadow-md"
+        >
+          <CalendarDays />
+        </button>
+        <button
+          title="Edit"
+          @click="editHabit"
+          class="text-gray-400 hover:text-white hover:scale-105 hover:bg-indigo-500 rounded-lg p-1 transition hover:shadow-md"
+        >
+          <SquarePen />
+        </button>
+      </div>
     </div>
 
     <table
