@@ -1,25 +1,22 @@
-import { createRouter, createMemoryHistory, createWebHistory } from "vue-router";
-import Dashboard from "../components/Dashboard.vue";
-import HabitDetail from "../components/HabitDetail.vue";
-import AddHabit from "../components/AddHabit.vue";
-import EditHabit from "../components/EditHabit.vue";
-import Calendar from "../components/Calendar.vue";
-import LandingPage from "../components/LandingPage.vue";
-
+import { createRouter, createWebHistory } from "vue-router";
 const routes = [
-  { path: "/", component: LandingPage },
-  { path: "/dashboard", component: Dashboard },
-  { path: "/habit/:id", component: HabitDetail },
-  { path: "/add", component: AddHabit },
-  { path: "/edit/:id", component: EditHabit },
+  { path: "/", component: () => import("../components/LandingPage.vue") },
+  { path: "/feed", component: () => import("../components/Feed.vue") },
+  { path: "/feed/:id", component: () => import("../components/SinglePost.vue") },
+  { path: "/auth", component: () => import("../components/Auth.vue") },
+  { path: "/profile/:username?", component: () => import("../components/UserProfile.vue") },
+  { path: "/dashboard", component: () => import("../components/Dashboard.vue") },
+  { path: "/habit/:id", component: () => import("../components/HabitDetail.vue") },
+  { path: "/add", component: () => import("../components/AddHabit.vue") },
+  { path: "/edit/:id", component: () => import("../components/EditHabit.vue") },
   {
     path: "/habit/:id/calendar",
-    component: Calendar,
+    component: () => import("../components/Calendar.vue"),
   },
 ];
 
 const router = createRouter({
-  history:createMemoryHistory(),
+  history: createWebHistory(),
   routes,
 });
 

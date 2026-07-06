@@ -18,42 +18,41 @@
     router.back();
   };
 
-  const goHome = () => {
-    router.push("/dashboard");
-  };
-
   if (habit.value) {
     events.value = habit.value.datesDone.map((date) => ({
       start: format(new Date(date), "yyyy-MM-dd"),
       end: format(new Date(date), "yyyy-MM-dd"),
-      title: "Done",
+      title: "Đã hoàn thành",
     }));
   }
 
   const onEventClick = (event) => {
-    alert(`Habit completed on: ${event.start}`);
+    // optional click handler
   };
 
   onMounted(() => {
-    if (!habit) {
+    if (!habit.value) {
       router.back();
-    } else {
-      console.log(habit);
     }
   });
 </script>
 
 <template>
-  <div class="container mx-auto p-4">
-    <div class="max-w-xl mx-auto bg-gray-800 shadow-md rounded-lg p-6">
+  <div class="container mx-auto p-4 max-w-xl pt-12 pb-24">
+    <div class="bg-surface border border-border shadow-subtle rounded-xl p-8">
       <div class="flex justify-between items-center mb-10">
-        <h1 class="text-2xl font-bold text-white">{{ habit?.name }} - Calendar</h1>
+        <div>
+           <div class="inline-flex items-center gap-2 px-3 py-1 mb-2 border border-border rounded-full text-xs uppercase tracking-widest font-mono text-muted">
+              Xem lịch
+            </div>
+           <h1 class="text-3xl font-display font-medium tracking-tight text-ink">{{ habit?.name }}</h1>
+        </div>
         <button
-          title="Close"
+          title="Đóng"
           @click="goBack"
-          class="text-gray-400 hover:text-white hover:scale-105 hover:bg-slate-500 rounded-lg p-1 transition hover:shadow-md"
+          class="text-muted hover:text-ink hover:bg-canvas rounded-md p-2 transition-colors"
         >
-          <X />
+          <X :size="20" />
         </button>
       </div>
       <VueCal
@@ -64,8 +63,35 @@
         hide-view-selector
         active-view="month"
         small
-        class="h-96"
+        class="h-96 rounded-lg border border-border"
       />
     </div>
   </div>
 </template>
+
+<style>
+  .vuecal__cell--has-events {
+    background-color: theme('colors.accent.green.bg') !important;
+    color: theme('colors.accent.green.text') !important;
+  }
+  .vuecal__cell-events-count {
+    display: none;
+  }
+  .vuecal {
+    border: none !important;
+  }
+  .vuecal__menu {
+    background-color: theme('colors.canvas') !important;
+    border-bottom: 1px solid theme('colors.border') !important;
+  }
+  .vuecal__title-bar {
+    background-color: theme('colors.surface') !important;
+    border-bottom: 1px solid theme('colors.border') !important;
+  }
+  .vuecal__heading {
+    background-color: theme('colors.canvas') !important;
+  }
+  .vuecal__cell {
+    border: 1px solid theme('colors.border') !important;
+  }
+</style>

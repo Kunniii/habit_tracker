@@ -1,11 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html {
-  font-family: "Ubuntu" !important;
+@layer base {
+  body {
+    @apply bg-canvas text-ink font-sans antialiased selection:bg-accent-blue-bg selection:text-accent-blue-text relative;
+  }
+  
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  }
 }
+
 button {
   @apply select-none;
 }
@@ -15,17 +29,17 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a202c;
+  background: #FBFBFA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #4a5568;
+  background-color: #EAEAEA;
   border-radius: 6px;
-  border: 3px solid #1a202c;
+  border: 3px solid #FBFBFA;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #718096;
+  background-color: #D1D1D1;
 }
 
 ::-webkit-scrollbar-button {
@@ -34,5 +48,21 @@ button {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #4a5568 #1a202c;
+  scrollbar-color: #EAEAEA #FBFBFA;
+}
+
+/* Page Transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-12px);
 }

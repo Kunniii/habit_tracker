@@ -6,12 +6,13 @@
 
   const habitStore = useHabitStore();
   const habits = computed(() => habitStore.habits);
+  const isLoading = computed(() => habitStore.isLoading);
 </script>
 
 <template>
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Your Habits</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <div class="container mx-auto p-4 max-w-5xl pt-12 pb-24">
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <HabitCard
         v-for="habit in habits"
         :key="habit.id"

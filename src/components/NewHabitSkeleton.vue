@@ -11,10 +11,12 @@
 
 <template>
   <div
-    class="cursor-pointer p-4 rounded-lg border-2 border-dashed border-gray-500 text-gray-500 flex flex-col justify-center items-center hover:bg-gray-800"
+    class="cursor-pointer bg-surface border border-dashed border-border rounded-xl p-5 min-h-[220px] flex flex-col justify-center items-center group transition hover:border-ink hover:bg-canvas"
     @click="addNewHabit"
   >
-    <Plus />
-    <p class="text-lg">Add New Habit</p>
+    <div class="w-12 h-12 rounded-full border border-border flex items-center justify-center text-muted group-hover:text-ink group-hover:border-ink transition-colors mb-4">
+      <Plus :size="24" />
+    </div>
+    <p class="font-medium text-muted group-hover:text-ink transition-colors">Thêm thói quen mới</p>
   </div>
 </template>

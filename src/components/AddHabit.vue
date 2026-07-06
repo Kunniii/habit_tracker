@@ -25,45 +25,54 @@
 </script>
 
 <template>
-  <div class="container mx-auto p-4">
-    <div class="max-w-lg mx-auto bg-gray-800 shadow-md rounded-lg p-6">
-      <h1 class="text-2xl font-bold mb-4 text-white">Add New Habit</h1>
+  <div class="container mx-auto p-4 max-w-xl pt-12 pb-24">
+    <div class="bg-surface border border-border shadow-subtle rounded-xl p-8">
+      <h1 class="text-4xl font-display tracking-tight font-medium mb-8 text-ink">Thói quen mới</h1>
       <form
         @submit.prevent="submitHabit"
-        class="space-y-4"
+        class="space-y-6"
       >
         <div>
           <label
             for="name"
-            class="block text-sm font-medium text-gray-300"
-            >Habit Name</label
+            class="block text-sm font-medium text-ink mb-2"
+            >Tên thói quen</label
           >
           <input
             type="text"
             id="name"
             v-model="habitName"
             required
-            class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholder="VD: Đọc 10 trang sách"
+            class="block w-full px-4 py-3 border border-border rounded-md focus:outline-none bg-canvas text-ink placeholder-muted focus:ring-1 focus:ring-ink focus:border-ink transition-shadow"
           />
         </div>
         <div>
           <label
             for="description"
-            class="block text-sm font-medium text-gray-300"
-            >Description</label
+            class="block text-sm font-medium text-ink mb-2"
+            >Mô tả <span class="text-muted font-normal text-xs ml-2">(Hỗ trợ Markdown)</span></label
           >
           <textarea
             id="description"
             v-model="habitDescription"
-            class="scrollable-container mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholder="Tại sao bạn muốn xây dựng thói quen này?"
+            class="block w-full h-32 px-4 py-3 border border-border rounded-md focus:outline-none bg-canvas text-ink placeholder-muted focus:ring-1 focus:ring-ink focus:border-ink transition-shadow resize-y"
           ></textarea>
         </div>
-        <div>
+        <div class="flex gap-4 pt-4">
+           <button
+            type="button"
+            @click="goBack"
+            class="flex-1 inline-flex items-center justify-center px-6 py-3 border border-border text-sm font-medium rounded-md text-ink bg-canvas hover:bg-border transition-colors"
+          >
+            Hủy
+          </button>
           <button
             type="submit"
-            class="w-full inline-flex items-center mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="flex-1 inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-ink hover:bg-black transition-transform hover:scale-[0.98]"
           >
-            <span class="mx-auto"> Add Habit</span>
+            Tạo thói quen
           </button>
         </div>
       </form>

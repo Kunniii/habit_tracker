@@ -1,0 +1,12 @@
+**/node_modules
+node_modules
+backend/node_modules
+dist
+.git
+.agents
+.env
+.env.local
+.vscode
+npm-debug.log
+yarn-error.log
+backend/dev.db

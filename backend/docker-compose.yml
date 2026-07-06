@@ -1,0 +1,13 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=change_me_in_production
+      - DATABASE_URL=file:./data/dev.db
+    volumes:
+      - ./data:/app/data
+      - ../dist:/dist # Mount frontend build to /dist in container

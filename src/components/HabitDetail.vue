@@ -2,11 +2,13 @@
   import { computed, ref } from "vue";
   import { useRoute, useRouter } from "vue-router";
   import { useHabitStore } from "../stores/habitStore";
-  import { format } from "date-fns";
-  import { SquarePen, Trash2, X, Flame, CalendarDays } from "lucide-vue-next";
+  import ShareModal from "./ShareModal.vue";
+  import { format, parseISO } from "date-fns";
+  import { SquarePen, Trash2, X, Flame, CalendarDays, CheckCircle2, Share } from "lucide-vue-next";
   import { marked } from "marked";
   import VueCal from "vue-cal";
   import "vue-cal/dist/vuecal.css";
+  import confetti from "canvas-confetti";
 
   const route = useRoute();
   const router = useRouter();
@@ -14,32 +16,57 @@
   const habitID = route.params.id;
   const habit = computed(() => habitStore.habits.find((habit) => habit.id === Number(habitID)));
   const events = ref([]);
+  const isShared = ref(false);
 
   if (!habit.value) {
     router.back();
   }
 
-  events.value = habit.value.datesDone.map((date) => ({
+  events.value = habit.value?.datesDone?.map((date) => ({
     start: format(new Date(date), "yyyy-MM-dd"),
     end: format(new Date(date), "yyyy-MM-dd"),
     title: "Done",
-  }));
+  })) || [];
 
-  const renderedDescription = ref(marked(habit.value.description));
+  const renderedDescription = ref(marked(habit.value?.description || ""));
 
-  const markAsDone = () => {
+  const markAsDone = (e) => {
     const today = format(new Date(), "yyyy-MM-dd");
     if (!habit.value.datesDone.includes(today)) {
       habitStore.markHabitAsDone(Number(habitID), today);
+      
+      const rect = e.target.getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = (rect.top + rect.height / 2) / window.innerHeight;
+      
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { x, y },
+        colors: ['#346538', '#1F6C9F', '#956400', '#9F2F2D']
+      });
     }
+  };
+  
+  const isDoneToday = computed(() => {
+    const today = format(new Date(), "yyyy-MM-dd");
+    return (habit.value?.datesDone || []).includes(today);
+  });
+  const showShareModal = ref(false);
+  
+  const handleShareClick = () => {
+    showShareModal.value = true;
+  };
+
+  const handleShared = () => {
+    isShared.value = true;
+    setTimeout(() => {
+      isShared.value = false;
+    }, 3000);
   };
 
   const goBack = () => {
     router.back();
-  };
-
-  const goHome = () => {
-    router.push("/dashboard");
   };
 
   const editHabit = () => {
@@ -48,7 +75,7 @@
 
   const deleteHabit = () => {
     habitStore.deleteHabit(Number(habitID));
-    goHome();
+    router.push("/dashboard");
   };
 
   const goToCalendar = () => {
@@ -56,7 +83,7 @@
   };
 
   const currentStreak = computed(() => {
-    const dates = habit.value.datesDone;
+    const dates = habit.value?.datesDone || [];
     if (dates.length === 0) return 0;
     const today = format(new Date(), "yyyy-MM-dd");
     let streak = 0;
@@ -69,7 +96,7 @@
   });
 
   const longestStreak = computed(() => {
-    const dates = habit.value.datesDone.sort();
+    const dates = [...(habit.value?.datesDone || [])].sort();
     if (dates.length === 0) return 0;
     let maxStreak = 0;
     let streak = 1;
@@ -89,114 +116,156 @@
 </script>
 
 <template>
-  <div class="container mx-auto p-4">
-    <div class="max-w-lg mx-auto bg-gray-800 shadow-md rounded-lg p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">{{ habit.name }}</h1>
+  <div class="container mx-auto p-4 max-w-3xl pt-12 pb-24">
+    <div v-if="habit" class="bg-surface border border-border rounded-xl p-8">
+      <div class="flex justify-between items-start mb-8">
+        <div>
+           <div class="inline-flex items-center gap-2 px-3 py-1 mb-4 border border-border rounded-full text-xs uppercase tracking-widest font-mono text-muted">
+              Chi tiết thói quen
+            </div>
+          <h1 class="text-4xl font-display tracking-tight font-medium text-ink">{{ habit.name }}</h1>
+        </div>
         <div class="flex gap-2">
           <button
             title="Calendar"
             @click="goToCalendar"
-            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-indigo-500 rounded-lg p-1 transition hover:shadow-md"
+            class="text-muted hover:text-ink hover:bg-canvas rounded-md p-2 transition-colors"
           >
-            <CalendarDays />
+            <CalendarDays :size="20" />
           </button>
           <button
             title="Edit"
             @click="editHabit"
-            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-indigo-500 rounded-lg p-1 transition hover:shadow-md"
+            class="text-muted hover:text-ink hover:bg-canvas rounded-md p-2 transition-colors"
           >
-            <SquarePen />
+            <SquarePen :size="20" />
           </button>
           <button
             title="Delete"
             @click="deleteHabit"
-            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-rose-500 rounded-lg p-1 transition hover:shadow-md"
+            class="text-muted hover:text-accent-red-text hover:bg-accent-red-bg rounded-md p-2 transition-colors"
           >
-            <Trash2 />
+            <Trash2 :size="20" />
           </button>
           <button
             title="Close"
-            @click="goHome"
-            class="text-gray-400 hover:text-white hover:scale-105 hover:bg-slate-500 rounded-lg p-1 transition hover:shadow-md"
+            @click="goBack"
+            class="text-muted hover:text-ink hover:bg-canvas rounded-md p-2 transition-colors ml-4"
           >
-            <X />
+            <X :size="20" />
           </button>
         </div>
       </div>
+      
       <div
-        class="prose prose-neutral prose-invert prose-h1:text-2xl prose-h2:text-1xl prose-h3:text-xl text-white max-h-[45vh] overflow-scroll overflow-y-auto overflow-x-hidden bg-gray-900 p-4 rounded-lg"
+        v-if="renderedDescription"
+        class="prose prose-neutral prose-h1:text-2xl prose-h2:text-1xl prose-h3:text-xl text-ink max-h-[45vh] overflow-y-auto overflow-x-hidden bg-canvas p-6 rounded-lg border border-border mb-8"
         v-html="renderedDescription"
       ></div>
 
-      <table
-        class="min-w-full bg-slate-700 text-slate-300 rounded-lg overflow-hidden text-center my-4"
-      >
-        <tbody>
-          <tr>
-            <td class="px-4 py-2 border-b border-slate-600">Current</td>
-            <td class="px-4 py-2 border-b border-slate-600">Longest</td>
-          </tr>
-          <tr class="">
-            <td class="px-4 py-2 text-xl font-black">
-              <span class="flex items-center justify-center gap-2"
-                ><span>{{ currentStreak }}</span
-                ><Flame
-                  :stroke-width="3"
-                  :class="currentStreak > 0 ? 'fill-orange-400 text-orange-500' : ''"
-                />
-              </span>
-            </td>
-            <td class="px-4 py-2 text-xl font-black">
-              <span class="flex items-center justify-center gap-2"
-                ><span>{{ longestStreak }}</span
-                ><Flame
-                  :stroke-width="3"
-                  :class="currentStreak > 0 ? 'fill-orange-400 text-orange-500' : ''"
-                />
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="flex gap-4 mb-8">
+        <div class="flex-1 bg-canvas border border-border rounded-lg p-4 text-center">
+           <span class="block text-xs uppercase tracking-widest text-muted mb-2">Chuỗi hiện tại</span>
+           <div class="flex items-center justify-center gap-2">
+             <span class="text-3xl font-medium tracking-tight text-ink">{{ currentStreak }}</span>
+             <Flame :size="24" :class="currentStreak > 0 ? 'text-accent-red-text fill-accent-red-bg' : 'text-muted'" />
+           </div>
+        </div>
+        <div class="flex-1 bg-canvas border border-border rounded-lg p-4 text-center">
+           <span class="block text-xs uppercase tracking-widest text-muted mb-2">Chuỗi dài nhất</span>
+           <div class="flex items-center justify-center gap-2">
+             <span class="text-3xl font-medium tracking-tight text-ink">{{ longestStreak }}</span>
+           </div>
+        </div>
+      </div>
 
-      <div class="flex gap-5">
+      <div class="flex flex-col sm:flex-row gap-4 mb-12">
         <button
           @click="goBack"
-          class="w-full inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="flex-1 inline-flex items-center justify-center px-6 py-3 border border-border text-sm font-medium rounded-md text-ink bg-canvas hover:bg-border transition-colors"
         >
-          <span class="mx-auto">Go to Dashboard</span>
+          Quay lại Bảng điều khiển
         </button>
 
         <button
+          v-if="!isDoneToday"
           @click="markAsDone"
-          class="inline-flex w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-ink hover:bg-black transition-transform hover:scale-[0.98]"
         >
-          <span class="mx-auto">Mark as Done Today</span>
+          <CheckCircle2 :size="18" />
+          Hoàn thành hôm nay
+        </button>
+        <button
+          v-else
+          disabled
+          class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium rounded-md text-muted bg-canvas cursor-not-allowed"
+        >
+          <CheckCircle2 :size="18" class="text-accent-green-text" />
+          Đã hoàn thành
         </button>
       </div>
-      <h2 class="text-xl font-semibold mt-6 mb-2">History</h2>
+      
+      <div class="border-t border-border pt-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-medium tracking-tight">Lịch sử</h2>
+          <div v-if="isDoneToday" class="flex flex-col sm:flex-row gap-3 mt-8">
+            <button
+              class="flex-1 px-4 py-2.5 bg-background border border-border text-ink rounded-lg font-medium hover:bg-surface hover:shadow-subtle hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+              @click="handleShareClick"
+            >
+              <Share :size="16" />
+              {{ isShared ? 'Đã chia sẻ!' : 'Chia sẻ thành tích' }}
+            </button>
+          </div>
+        </div>
 
-      <VueCal
-        :events="events"
-        :time="false"
-        :transitions="false"
-        :disable-views="['week', 'day']"
-        hide-view-selector
-        events-count-on-year-view
-        active-view="month"
-        xsmall
-        class="h-96 bg-gray-900"
-      />
+        <VueCal
+          :events="events"
+          :time="false"
+          :transitions="false"
+          :disable-views="['week', 'day']"
+          hide-view-selector
+          events-count-on-year-view
+          active-view="month"
+          xsmall
+          class="h-96 rounded-lg border border-border"
+        />
+      </div>
     </div>
+    
+    <ShareModal 
+      v-if="habit"
+      :habit="habit"
+      :show="showShareModal"
+      @close="showShareModal = false"
+      @shared="handleShared"
+    />
   </div>
 </template>
 
 <style>
   .vuecal__cell--has-events {
-    @apply bg-emerald-600;
+    background-color: theme('colors.accent.green.bg') !important;
+    color: theme('colors.accent.green.text') !important;
   }
   .vuecal__cell-events-count {
     display: none;
+  }
+  .vuecal {
+    border: none !important;
+  }
+  .vuecal__menu {
+    background-color: theme('colors.canvas') !important;
+    border-bottom: 1px solid theme('colors.border') !important;
+  }
+  .vuecal__title-bar {
+    background-color: theme('colors.surface') !important;
+    border-bottom: 1px solid theme('colors.border') !important;
+  }
+  .vuecal__heading {
+    background-color: theme('colors.canvas') !important;
+  }
+  .vuecal__cell {
+    border: 1px solid theme('colors.border') !important;
   }
 </style>

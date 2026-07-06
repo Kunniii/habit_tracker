@@ -1,0 +1,203 @@
+<script setup>
+import { ref, onMounted, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { Style, Avatar } from '@dicebear/core';
+import definition from '@dicebear/styles/lorelei.json';
+import { useAuthStore } from '../stores/auth';
+import { useHabitStore } from '../stores/habitStore';
+import { User as UserIcon, Pencil } from 'lucide-vue-next';
+import { toast } from 'vue-sonner';
+
+const route = useRoute();
+const router = useRouter();
+const auth = useAuthStore();
+const habitStore = useHabitStore();
+
+const isSyncing = ref(false);
+
+const seed = ref('');
+const bio = ref('');
+const displayUsername = ref('');
+const isSaving = ref(false);
+const isLoading = ref(true);
+
+const mode = ref('view'); // 'view' or 'edit'
+
+const isOwner = computed(() => {
+  if (!auth.user) return false;
+  if (!route.params.username) return true;
+  return route.params.username === auth.user.username;
+});
+
+const avatarSvg = computed(() => {
+  if (!seed.value) return '';
+  try {
+    const style = new Style(definition);
+    const avatar = new Avatar(style, { seed: seed.value });
+    return avatar.toString();
+  } catch(e) {
+    console.error("Dicebear Error:", e);
+    return '';
+  }
+});
+
+const randomizeAvatar = () => {
+  seed.value = Math.random().toString(36).substring(7);
+};
+
+const loadProfile = async () => {
+  isLoading.value = true;
+  
+  if (route.query.mode === 'edit') {
+    mode.value = 'edit';
+  }
+  
+  if (!auth.user && auth.token) {
+    await auth.fetchProfile();
+  }
+
+  const targetUsername = route.params.username;
+
+  if (targetUsername) {
+    try {
+      const res = await fetch(`/api/user/${targetUsername}`);
+      if (res.ok) {
+        const data = await res.json();
+        seed.value = data.profilePic || '';
+        bio.value = data.bio || '';
+        displayUsername.value = data.username;
+      } else {
+        toast.error("Người dùng không tồn tại");
+        router.push('/feed');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    if (auth.user) {
+      seed.value = auth.user.profilePic || '';
+      bio.value = auth.user.bio || '';
+      displayUsername.value = auth.user.username;
+    } else {
+      router.push('/auth');
+      return;
+    }
+  }
+  
+  isLoading.value = false;
+};
+
+const saveProfile = async () => {
+  isSaving.value = true;
+  if (!auth.token) {
+    toast.warning("Vui lòng đăng nhập để lưu.");
+    isSaving.value = false;
+    return;
+  }
+  try {
+    const res = await fetch('/api/user/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth.token}`
+      },
+      body: JSON.stringify({
+        profilePic: seed.value,
+        bio: bio.value
+      })
+    });
+    if (res.ok) {
+      toast.success("Đã lưu thành công!");
+      await auth.fetchProfile(); 
+      router.replace('/profile');
+    } else {
+      toast.error("Lỗi khi lưu");
+    }
+  } catch(e) {
+    toast.error("Lỗi khi lưu");
+  } finally {
+    isSaving.value = false;
+  }
+};
+
+onMounted(() => {
+  loadProfile();
+});
+
+watch(() => route.params.username, () => {
+  mode.value = route.query.mode === 'edit' ? 'edit' : 'view';
+  loadProfile();
+});
+
+watch(() => route.query.mode, (newMode) => {
+  if (newMode === 'edit') mode.value = 'edit';
+  else mode.value = 'view';
+});
+</script>
+
+<template>
+  <div class="max-w-2xl mx-auto p-6 mt-8">
+    <div class="bg-surface border border-border rounded-xl p-8 shadow-sm">
+      <div v-if="isLoading" class="text-center py-8 text-muted">Đang tải...</div>
+      
+      <div v-else-if="mode === 'view'">
+        <div class="flex flex-col items-center mb-6 gap-4">
+          <div v-if="avatarSvg" class="w-32 h-32 bg-gray-100 rounded-[2rem] overflow-hidden border border-border shadow-subtle ring-4 ring-surface" v-html="avatarSvg"></div>
+          <div v-else class="w-32 h-32 bg-gray-100 rounded-[2rem] flex items-center justify-center border border-border shadow-subtle ring-4 ring-surface">
+            <UserIcon class="w-12 h-12 text-muted" />
+          </div>
+          
+          <h2 class="font-playwrite text-2xl text-ink font-medium tracking-wide mt-2">@{{ displayUsername }}</h2>
+        </div>
+
+        <div class="mb-8 text-center max-w-lg mx-auto">
+          <p class="text-lg leading-relaxed whitespace-pre-wrap font-playwrite" :class="bio ? 'text-ink' : 'text-muted italic'">
+            {{ bio || 'Chưa có thông tin giới thiệu.' }}
+          </p>
+        </div>
+      </div>
+
+      <div v-else-if="mode === 'edit'">
+        <div class="flex flex-col items-center mb-8 gap-4">
+          <div v-if="avatarSvg" class="w-32 h-32 bg-gray-100 rounded-full overflow-hidden border border-border" v-html="avatarSvg"></div>
+          <div v-else class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center border border-border">
+             <UserIcon class="w-12 h-12 text-muted" />
+          </div>
+          <button 
+            @click="randomizeAvatar"
+            class="text-sm px-4 py-2 bg-gray-200 text-ink rounded-md hover:bg-gray-300 transition-colors"
+          >
+            🎲 Đổi ảnh ngẫu nhiên
+          </button>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-ink mb-2">Giới thiệu bản thân (Bio)</label>
+          <textarea
+            v-model="bio"
+            rows="4"
+            placeholder="Hãy viết vài dòng về bạn..."
+            class="font-playwrite w-full px-4 py-3 bg-background border border-border rounded-lg text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-ink"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3">
+          <button 
+            @click="router.replace('/profile')" 
+            class="px-4 py-2 text-ink bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          >
+            Hủy
+          </button>
+          <button 
+            @click="saveProfile"
+            :disabled="isSaving"
+            class="px-6 py-2 bg-ink text-white rounded-md hover:bg-black transition-colors disabled:opacity-50"
+          >
+            {{ isSaving ? 'Đang lưu...' : 'Lưu' }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
