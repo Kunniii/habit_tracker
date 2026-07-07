@@ -5,8 +5,14 @@
 <template>
   <div class="min-h-[100dvh] bg-canvas text-ink flex flex-col">
     <!-- Hero Section -->
-    <section class="flex-1 flex flex-col justify-center py-24 px-6">
-      <div class="container mx-auto max-w-5xl">
+    <section class="flex-1 flex flex-col justify-center py-24 px-6 relative overflow-hidden">
+      <!-- Mobile Background -->
+      <div class="absolute inset-0 md:hidden">
+        <div class="absolute inset-0 bg-[url('/hero.png')] bg-cover bg-center opacity-80"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-canvas/40 via-canvas/80 to-canvas"></div>
+      </div>
+
+      <div class="container mx-auto max-w-5xl relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div class="max-w-xl animate-fade-in">
             <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-border rounded-full text-xs uppercase tracking-widest font-mono text-muted">
