@@ -103,7 +103,7 @@ const avatarSvg = computed(() => {
       <div class="flex items-center gap-3">
         <RouterLink to="/" class="flex items-center gap-2 text-ink hover:text-muted transition-colors">
           <img src="/favicon.png" alt="HabitFlow" class="w-7 h-7 object-contain rounded-md" />
-          <span class="font-display text-2xl font-semibold tracking-tight italic">HabitFlow</span>
+          <span class="hidden sm:block font-display text-2xl font-semibold tracking-tight italic">HabitFlow</span>
         </RouterLink>
         <template v-if="pageTitle">
           <span class="text-muted/30 select-none">/</span>
