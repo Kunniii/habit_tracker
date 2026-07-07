@@ -16,9 +16,12 @@ const habitStore = useHabitStore();
 const isSyncing = ref(false);
 
 const seed = ref('');
+const originalSeed = ref('');
 const bio = ref('');
+const originalBio = ref('');
 const username = ref('');
 const displayName = ref('');
+const originalDisplayName = ref('');
 const isSaving = ref(false);
 const isLoading = ref(true);
 
@@ -59,9 +62,12 @@ const loadProfile = async () => {
       if (res.ok) {
         const data = await res.json();
         seed.value = data.profilePic || '';
+        originalSeed.value = seed.value;
         bio.value = data.bio || '';
+        originalBio.value = bio.value;
         username.value = data.username;
         displayName.value = data.displayName || data.username;
+        originalDisplayName.value = displayName.value;
       } else {
         toast.error("Người dùng không tồn tại");
         router.push('/feed');
@@ -72,9 +78,12 @@ const loadProfile = async () => {
   } else {
     if (auth.user) {
       seed.value = auth.user.profilePic || '';
+      originalSeed.value = seed.value;
       bio.value = auth.user.bio || '';
+      originalBio.value = bio.value;
       username.value = auth.user.username;
       displayName.value = auth.user.displayName || auth.user.username;
+      originalDisplayName.value = displayName.value;
     } else {
       router.push('/auth');
       return;
@@ -116,6 +125,13 @@ const saveProfile = async () => {
   } finally {
     isSaving.value = false;
   }
+};
+
+const cancelEdit = () => {
+  seed.value = originalSeed.value;
+  bio.value = originalBio.value;
+  displayName.value = originalDisplayName.value;
+  router.replace('/profile');
 };
 
 onMounted(() => {
@@ -194,7 +210,7 @@ watch(() => route.query.mode, (newMode) => {
 
         <div class="flex justify-end gap-3">
           <button 
-            @click="router.replace('/profile')" 
+            @click="cancelEdit" 
             class="px-4 py-2 text-ink bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
           >
             Hủy
