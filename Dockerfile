@@ -11,7 +11,8 @@ FROM node:lts
 WORKDIR /app/backend
 
 COPY backend/package.json backend/yarn.lock ./
-RUN yarn install --frozen-lockfile
+# Force build from source for native modules (sqlite3) to avoid GLIBC mismatch
+RUN npm_config_build_from_source=sqlite3 yarn install --frozen-lockfile
 COPY backend ./
 
 # Copy built frontend to /app/dist
