@@ -14,6 +14,7 @@ const routes = [
     component: () => import("../components/Calendar.vue"),
     meta: { title: "Lịch sử" }
   },
+  { path: "/terms", component: () => import("../components/Terms.vue"), meta: { title: "Điều khoản và Điều kiện" } }
 ];
 
 const router = createRouter({

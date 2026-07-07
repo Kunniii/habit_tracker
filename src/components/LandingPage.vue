@@ -98,8 +98,9 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-8 bg-surface border-t border-border text-center">
-      <p class="text-sm text-muted">&copy; {{ new Date().getFullYear() }} <span class="font-display italic font-semibold">HabitFlow</span>. Theo dõi thói quen - Tối giản.</p>
+    <footer class="py-8 bg-surface border-t border-border text-center flex flex-col items-center justify-center gap-2">
+      <p class="text-sm text-muted font-mono"> &copy; {{ new Date().getFullYear() }} <span class="font-display italic font-semibold">HabitFlow @</span> CodeChoVui</p>
+      <router-link to="/terms" class="text-xs text-muted hover:text-ink transition-colors underline underline-offset-2">Điều khoản và Điều kiện</router-link>
     </footer>
   </div>
 </template>
