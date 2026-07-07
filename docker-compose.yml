@@ -1,0 +1,22 @@
+services:
+  habitflow.codechovui.dev:
+    build: .
+    container_name: habitflow.codechovui.dev
+    hostname: habitflow
+    environment:
+      - DB_STORAGE_PATH=/app/data/dev.db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.habitflow-codechovui.rule=Host(`habitflow.codechovui.dev`)"
+      - "traefik.http.routers.habitflow-codechovui.entrypoints=websecure"
+      - "traefik.http.routers.habitflow-codechovui.tls.certresolver=myresolver"
+      - "traefik.http.services.habitflow-codechovui.loadbalancer.server.port=3000"
+    volumes:
+      - ./data:/app/data
+    networks:
+      - traefik_default
+    restart: unless-stopped
+
+networks:
+  traefik_default:
+    external: true

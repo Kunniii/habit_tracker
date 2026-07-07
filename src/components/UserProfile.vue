@@ -17,17 +17,12 @@ const isSyncing = ref(false);
 
 const seed = ref('');
 const bio = ref('');
-const displayUsername = ref('');
+const username = ref('');
+const displayName = ref('');
 const isSaving = ref(false);
 const isLoading = ref(true);
 
 const mode = ref('view'); // 'view' or 'edit'
-
-const isOwner = computed(() => {
-  if (!auth.user) return false;
-  if (!route.params.username) return true;
-  return route.params.username === auth.user.username;
-});
 
 const avatarSvg = computed(() => {
   if (!seed.value) return '';
@@ -65,7 +60,8 @@ const loadProfile = async () => {
         const data = await res.json();
         seed.value = data.profilePic || '';
         bio.value = data.bio || '';
-        displayUsername.value = data.username;
+        username.value = data.username;
+        displayName.value = data.displayName || data.username;
       } else {
         toast.error("Người dùng không tồn tại");
         router.push('/feed');
@@ -77,7 +73,8 @@ const loadProfile = async () => {
     if (auth.user) {
       seed.value = auth.user.profilePic || '';
       bio.value = auth.user.bio || '';
-      displayUsername.value = auth.user.username;
+      username.value = auth.user.username;
+      displayName.value = auth.user.displayName || auth.user.username;
     } else {
       router.push('/auth');
       return;
@@ -103,7 +100,8 @@ const saveProfile = async () => {
       },
       body: JSON.stringify({
         profilePic: seed.value,
-        bio: bio.value
+        bio: bio.value,
+        displayName: displayName.value
       })
     });
     if (res.ok) {
@@ -147,7 +145,10 @@ watch(() => route.query.mode, (newMode) => {
             <UserIcon class="w-12 h-12 text-muted" />
           </div>
           
-          <h2 class="font-playwrite text-2xl text-ink font-medium tracking-wide mt-2">@{{ displayUsername }}</h2>
+          <div class="text-center mt-2">
+            <h2 class="font-playwrite text-2xl text-ink font-medium tracking-wide">{{ displayName }}</h2>
+            <p class="text-sm text-muted mt-1">@{{ username }}</p>
+          </div>
         </div>
 
         <div class="mb-8 text-center max-w-lg mx-auto">
@@ -159,8 +160,8 @@ watch(() => route.query.mode, (newMode) => {
 
       <div v-else-if="mode === 'edit'">
         <div class="flex flex-col items-center mb-8 gap-4">
-          <div v-if="avatarSvg" class="w-32 h-32 bg-gray-100 rounded-full overflow-hidden border border-border" v-html="avatarSvg"></div>
-          <div v-else class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center border border-border">
+          <div v-if="avatarSvg" class="w-32 h-32 bg-gray-100 rounded-[2rem] overflow-hidden border border-border ring-4 ring-surface shadow-subtle" v-html="avatarSvg"></div>
+          <div v-else class="w-32 h-32 bg-gray-100 rounded-[2rem] flex items-center justify-center border border-border ring-4 ring-surface shadow-subtle">
              <UserIcon class="w-12 h-12 text-muted" />
           </div>
           <button 
@@ -169,6 +170,16 @@ watch(() => route.query.mode, (newMode) => {
           >
             🎲 Đổi ảnh ngẫu nhiên
           </button>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-ink mb-2">Tên hiển thị</label>
+          <input
+            v-model="displayName"
+            type="text"
+            placeholder="Tên của bạn"
+            class="w-full px-4 py-3 bg-background border border-border rounded-lg text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-ink"
+          />
         </div>
 
         <div class="mb-6">

@@ -108,7 +108,10 @@
 </script>
 
 <template>
-  <div v-if="habit" class="bg-surface border border-border rounded-xl p-5 flex flex-col justify-between transition hover:shadow-subtle group">
+  <div 
+    v-if="habit" 
+    :class="['rounded-xl p-5 flex flex-col justify-between transition hover:shadow-subtle group', isDoneToday ? 'bg-[#EDF3EC]/40 border border-[#346538]/20' : 'bg-surface border border-border']"
+  >
     <div>
       <div class="flex justify-between items-start mb-4">
         <h2
@@ -152,32 +155,32 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-2">
+    <div class="flex gap-2 h-[38px]">
       <button
         v-if="!isDoneToday"
         @click="markAsDone"
-        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-ink hover:bg-black transition-transform hover:scale-[0.98]"
+        class="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-ink hover:bg-black transition-transform hover:scale-[0.98]"
       >
         <CheckCircle2 :size="16" />
         Hoàn thành hôm nay
       </button>
-      <button
-        v-else
-        disabled
-        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-border text-sm font-medium rounded-md text-muted bg-canvas cursor-not-allowed"
-      >
-        <CheckCircle2 :size="16" class="text-accent-green-text" />
-        Đã hoàn thành
-      </button>
 
-      <button
-        v-if="isDoneToday"
-        @click="handleShareClick"
-        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-border text-sm font-medium rounded-md text-ink bg-surface hover:bg-canvas transition-colors mt-1"
-      >
-        <Share :size="16" />
-        {{ isShared ? 'Đã chia sẻ lên bảng tin!' : 'Chia sẻ thành tích' }}
-      </button>
+      <template v-else>
+        <button
+          disabled
+          class="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-border text-sm font-medium rounded-md text-muted bg-canvas cursor-not-allowed"
+        >
+          <CheckCircle2 :size="16" class="text-accent-green-text" />
+          Đã hoàn thành
+        </button>
+        <button
+          @click="handleShareClick"
+          :title="isShared ? 'Đã chia sẻ lên bảng tin!' : 'Chia sẻ thành tích'"
+          class="flex-shrink-0 flex items-center justify-center w-[38px] border border-border rounded-md text-ink bg-surface hover:bg-canvas transition-colors"
+        >
+          <Share :size="16" :class="{'text-accent-green-text': isShared}" />
+        </button>
+      </template>
     </div>
     
     <ShareModal 

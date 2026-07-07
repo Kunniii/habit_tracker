@@ -6,6 +6,9 @@ export const useHabitStore = defineStore("habit", {
   state: () => ({
     habits: useStorage("habit", []),
     feed: [],
+    feedPage: 1,
+    hasMoreFeed: true,
+    isFeedLoading: false,
     isLoading: false,
     error: null,
   }),
@@ -45,20 +48,39 @@ export const useHabitStore = defineStore("habit", {
     },
 
     // FEED
-    async fetchFeed() {
+    async fetchFeed(reset = false) {
+      if (reset) {
+        this.feedPage = 1;
+        this.hasMoreFeed = true;
+        this.feed = [];
+      }
+      
+      if (!this.hasMoreFeed || this.isFeedLoading) return;
+      
+      this.isFeedLoading = true;
       try {
-        const res = await fetch('/api/achievements/feed');
+        const res = await fetch(`/api/achievements/feed?page=${this.feedPage}&limit=20`);
         if (res.ok) {
           const data = await res.json();
-          this.feed = data;
+          if (data.length < 20) {
+            this.hasMoreFeed = false;
+          }
+          if (reset) {
+            this.feed = data;
+          } else {
+            this.feed.push(...data);
+          }
+          this.feedPage++;
         }
       } catch (e) {
         console.error('Failed to fetch feed:', e);
+      } finally {
+        this.isFeedLoading = false;
       }
     },
     shareAchievement(habitId, message) {
       // Trigger a re-fetch of the feed since we added a share via ShareModal
-      this.fetchFeed();
+      this.fetchFeed(true);
     },
 
     // SYNC

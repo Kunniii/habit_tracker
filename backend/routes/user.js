@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['username', 'profilePic', 'bio']
+      attributes: ['username', 'displayName', 'profilePic', 'bio']
     });
 
     if (!user) {
@@ -24,10 +24,10 @@ router.get('/profile', authenticateToken, async (req, res) => {
 // Update profile
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
-    const { profilePic, bio } = req.body;
+    const { profilePic, bio, displayName } = req.body;
     
     await User.update(
-      { profilePic, bio },
+      { profilePic, bio, displayName },
       { where: { id: req.user.id } }
     );
 
@@ -40,8 +40,8 @@ router.put('/profile', authenticateToken, async (req, res) => {
 router.get('/:username', async (req, res) => {
   try {
     const user = await User.findOne({
-      where: { username: req.params.username },
-      attributes: ['username', 'profilePic', 'bio']
+      where: { username: req.params.username.toLowerCase() },
+      attributes: ['username', 'displayName', 'profilePic', 'bio']
     });
 
     if (!user) {

@@ -1,8 +1,10 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
+const storagePath = process.env.DB_STORAGE_PATH || './dev.db';
+
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: './dev.db',
+  storage: storagePath,
   logging: false
 });
 
@@ -16,6 +18,10 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
+  },
+  displayName: {
+    type: DataTypes.STRING,
+    allowNull: true
   },
   passwordHash: {
     type: DataTypes.STRING,

@@ -1,6 +1,27 @@
 <script setup>
   import NavBar from "./components/NavBar.vue";
-  import { Toaster } from 'vue-sonner';
+  import { Toaster, toast } from 'vue-sonner';
+  import { useNetwork } from '@vueuse/core';
+  import { watch } from 'vue';
+  import { useHabitStore } from './stores/habitStore';
+  import { useAuthStore } from './stores/auth';
+
+  const { isOnline } = useNetwork();
+  const habitStore = useHabitStore();
+  const authStore = useAuthStore();
+
+  watch(isOnline, async (newVal, oldVal) => {
+    // Only trigger sync if we just came back online and the user is logged in
+    if (newVal === true && oldVal === false && authStore.token) {
+      toast('Đã kết nối mạng lại, đang đồng bộ...', { icon: '🔄' });
+      try {
+        await habitStore.syncHabits();
+        toast.success('Đồng bộ thành công!');
+      } catch (e) {
+        toast.error('Đồng bộ thất bại: ' + e.message);
+      }
+    }
+  });
 </script>
 
 <template>

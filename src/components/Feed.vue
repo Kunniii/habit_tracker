@@ -1,19 +1,29 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useHabitStore } from "../stores/habitStore";
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
-import { Flame, User, PartyPopper, Share } from "lucide-vue-next";
+import { Flame, User, PartyPopper, Share, Loader2, WifiOff } from "lucide-vue-next";
 import { Style, Avatar } from '@dicebear/core';
 import definition from '@dicebear/styles/lorelei.json';
 import confetti from 'canvas-confetti';
 import { toast } from 'vue-sonner';
+import { useIntersectionObserver, useNetwork } from "@vueuse/core";
+import FeedSkeleton from './FeedSkeleton.vue';
 
 const habitStore = useHabitStore();
 const feed = computed(() => habitStore.feed);
+const loadMoreTrigger = ref(null);
+const { isOnline } = useNetwork();
 
 onMounted(() => {
-  habitStore.fetchFeed();
+  habitStore.fetchFeed(true);
+});
+
+useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
+  if (isIntersecting && habitStore.hasMoreFeed) {
+    habitStore.fetchFeed();
+  }
 });
 
 const cheerTimers = {};
@@ -114,8 +124,22 @@ const generateAvatar = (seed) => {
 <template>
   <div class="container mx-auto p-4 max-w-2xl pt-16 pb-24">
 
-    <div class="flex flex-col gap-12">
-      <div v-if="feed.length === 0" class="text-center py-24 text-muted">
+    <div v-if="!isOnline" class="flex flex-col items-center justify-center py-24 text-center">
+      <div class="w-16 h-16 bg-canvas border border-border rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+        <WifiOff class="text-muted w-8 h-8" />
+      </div>
+      <h2 class="text-xl font-medium tracking-tight mb-2">Không có kết nối mạng</h2>
+      <p class="text-muted max-w-sm">Bạn đang ngoại tuyến. Vui lòng kiểm tra lại kết nối Internet để xem Bảng tin.</p>
+    </div>
+
+    <template v-else>
+      <TransitionGroup name="list" tag="div" class="flex flex-col gap-12">
+      
+      <div v-if="feed.length === 0 && habitStore.isFeedLoading" class="w-full">
+        <FeedSkeleton v-for="i in 5" :key="`skeleton-${i}`" />
+      </div>
+
+      <div v-else-if="feed.length === 0 && !habitStore.isFeedLoading" class="text-center py-24 text-muted">
         <p class="text-lg">Ở đây yên tĩnh quá. Hãy là người đầu tiên chia sẻ thành tích!</p>
       </div>
 
@@ -153,17 +177,22 @@ const generateAvatar = (seed) => {
         <div class="flex-1 pt-1">
           <!-- Header -->
           <div class="flex items-baseline justify-between mb-3">
-            <router-link 
-              v-if="post.user !== 'Unknown' && post.user !== 'You'"
-              :to="`/profile/${post.user}`" 
-              class="font-medium text-ink text-base tracking-tight hover:underline underline-offset-4 decoration-2 decoration-border"
-            >
-              {{ post.user }}
-            </router-link>
-            <span v-else class="font-medium text-ink text-base tracking-tight">
-              {{ post.user === 'You' ? 'Bạn' : post.user }}
-            </span>
-            <span class="text-sm text-muted">{{ formatDistanceToNow(new Date(post.date), { addSuffix: true, locale: vi }) }}</span>
+            <div class="flex items-baseline gap-2">
+              <router-link 
+                v-if="post.user !== 'Unknown' && post.user !== 'You'"
+                :to="`/profile/${post.user}`" 
+                class="font-medium text-ink text-base tracking-tight hover:underline underline-offset-4 decoration-2 decoration-border"
+              >
+                {{ post.userDisplayName || post.user }}
+              </router-link>
+              <span v-else class="font-medium text-ink text-base tracking-tight">
+                {{ post.user === 'You' ? 'Bạn' : (post.userDisplayName || post.user) }}
+              </span>
+              <span v-if="post.user !== 'Unknown' && post.user !== 'You'" class="text-sm text-muted hidden sm:inline">
+                @{{ post.user }}
+              </span>
+            </div>
+            <span class="text-sm text-muted whitespace-nowrap">{{ formatDistanceToNow(new Date(post.date), { addSuffix: true, locale: vi }) }}</span>
           </div>
           
           <!-- Content -->
@@ -205,6 +234,27 @@ const generateAvatar = (seed) => {
           </div>
         </div>
       </div>
+    </TransitionGroup>
+
+    <div v-if="habitStore.hasMoreFeed && feed.length > 0" ref="loadMoreTrigger" class="py-12 flex justify-center">
+      <Loader2 class="w-6 h-6 text-muted animate-spin" />
     </div>
+    </template>
   </div>
 </template>
+
+<style scoped>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-leave-active {
+  position: absolute;
+}
+</style>

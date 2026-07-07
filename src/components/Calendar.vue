@@ -5,7 +5,7 @@
   import { format } from "date-fns";
   import VueCal from "vue-cal";
   import "vue-cal/dist/vuecal.css";
-  import { X } from "lucide-vue-next";
+  import { ArrowLeft, X } from "lucide-vue-next";
 
   const events = ref([]);
   const route = useRoute();
@@ -38,7 +38,14 @@
 </script>
 
 <template>
-  <div class="container mx-auto p-4 max-w-xl pt-12 pb-24">
+  <div class="container mx-auto p-4 max-w-xl pt-8 pb-24">
+    <div class="mb-8">
+      <button @click="goBack" class="inline-flex items-center gap-2 text-muted hover:text-ink transition-colors font-medium text-sm px-3 py-2 -ml-3 rounded-lg hover:bg-gray-50">
+        <ArrowLeft :size="16" />
+        Quay lại Thói quen
+      </button>
+    </div>
+    
     <div class="bg-surface border border-border shadow-subtle rounded-xl p-8">
       <div class="flex justify-between items-center mb-10">
         <div>
@@ -47,13 +54,6 @@
             </div>
            <h1 class="text-3xl font-display font-medium tracking-tight text-ink">{{ habit?.name }}</h1>
         </div>
-        <button
-          title="Đóng"
-          @click="goBack"
-          class="text-muted hover:text-ink hover:bg-canvas rounded-md p-2 transition-colors"
-        >
-          <X :size="20" />
-        </button>
       </div>
       <VueCal
         :events="events"

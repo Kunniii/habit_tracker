@@ -119,10 +119,6 @@ const avatarSvg = computed(() => {
           active-class="text-ink bg-gray-50" title="Thói quen của tôi">
           <LayoutDashboard class="w-5 h-5" />
         </RouterLink>
-        <RouterLink to="/add"
-          class="text-white bg-ink p-2 rounded-md hover:bg-black transition-transform hover:scale-[0.98]" title="Thói quen mới">
-          <Plus class="w-5 h-5" />
-        </RouterLink>
         <div class="relative" ref="dropdownRef">
           <button @click="handleAvatarClick"
             class="flex items-center gap-2 text-sm font-medium text-muted hover:text-ink transition-colors focus:outline-none">

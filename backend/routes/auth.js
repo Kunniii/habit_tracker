@@ -8,10 +8,12 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password, displayName } = req.body;
     if (!username || !password) {
       return res.status(400).json({ error: 'Username and password required' });
     }
+
+    username = username.toLowerCase();
 
     const existingUser = await User.findOne({ where: { username } });
     if (existingUser) {
@@ -21,6 +23,7 @@ router.post('/register', async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await User.create({
       username,
+      displayName: displayName || username,
       passwordHash,
     });
 
@@ -32,7 +35,9 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
+    if (username) username = username.toLowerCase();
+    
     const user = await User.findOne({ where: { username } });
 
     if (!user) {

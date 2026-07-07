@@ -4,7 +4,7 @@
   import { useHabitStore } from "../stores/habitStore";
   import ShareModal from "./ShareModal.vue";
   import { format, parseISO } from "date-fns";
-  import { SquarePen, Trash2, X, Flame, CalendarDays, CheckCircle2, Share } from "lucide-vue-next";
+  import { SquarePen, Trash2, X, Flame, CalendarDays, CheckCircle2, Share, ArrowLeft } from "lucide-vue-next";
   import { marked } from "marked";
   import VueCal from "vue-cal";
   import "vue-cal/dist/vuecal.css";
@@ -116,7 +116,14 @@
 </script>
 
 <template>
-  <div class="container mx-auto p-4 max-w-3xl pt-12 pb-24">
+  <div class="container mx-auto p-4 max-w-3xl pt-8 pb-24">
+    <div class="mb-8">
+      <button @click="goBack" class="inline-flex items-center gap-2 text-muted hover:text-ink transition-colors font-medium text-sm px-3 py-2 -ml-3 rounded-lg hover:bg-gray-50">
+        <ArrowLeft :size="16" />
+        Quay lại Bảng điều khiển
+      </button>
+    </div>
+    
     <div v-if="habit" class="bg-surface border border-border rounded-xl p-8">
       <div class="flex justify-between items-start mb-8">
         <div>
@@ -159,7 +166,7 @@
       
       <div
         v-if="renderedDescription"
-        class="prose prose-neutral prose-h1:text-2xl prose-h2:text-1xl prose-h3:text-xl text-ink max-h-[45vh] overflow-y-auto overflow-x-hidden bg-canvas p-6 rounded-lg border border-border mb-8"
+        class="prose prose-neutral prose-h1:text-2xl prose-h2:text-1xl prose-h3:text-xl text-ink max-h-[45vh] overflow-y-auto overflow-x-hidden mb-8"
         v-html="renderedDescription"
       ></div>
 
@@ -179,44 +186,36 @@
         </div>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-4 mb-12">
-        <button
-          @click="goBack"
-          class="flex-1 inline-flex items-center justify-center px-6 py-3 border border-border text-sm font-medium rounded-md text-ink bg-canvas hover:bg-border transition-colors"
-        >
-          Quay lại Bảng điều khiển
-        </button>
-
+      <div class="flex flex-col sm:flex-row gap-4 mb-12 h-[50px]">
         <button
           v-if="!isDoneToday"
           @click="markAsDone"
-          class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-ink hover:bg-black transition-transform hover:scale-[0.98]"
+          class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-ink hover:bg-black transition-transform hover:scale-[0.98]"
         >
           <CheckCircle2 :size="18" />
           Hoàn thành hôm nay
         </button>
-        <button
-          v-else
-          disabled
-          class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium rounded-md text-muted bg-canvas cursor-not-allowed"
-        >
-          <CheckCircle2 :size="18" class="text-accent-green-text" />
-          Đã hoàn thành
-        </button>
+        <template v-else>
+          <button
+            disabled
+            class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium rounded-md text-muted bg-canvas cursor-not-allowed"
+          >
+            <CheckCircle2 :size="18" class="text-accent-green-text" />
+            Đã hoàn thành
+          </button>
+          <button
+            @click="handleShareClick"
+            :title="isShared ? 'Đã chia sẻ lên bảng tin!' : 'Chia sẻ thành tích'"
+            class="flex-shrink-0 flex items-center justify-center w-[50px] border border-border rounded-md text-ink bg-surface hover:bg-canvas transition-colors"
+          >
+            <Share :size="18" :class="{'text-accent-green-text': isShared}" />
+          </button>
+        </template>
       </div>
       
       <div class="border-t border-border pt-8">
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-xl font-medium tracking-tight">Lịch sử</h2>
-          <div v-if="isDoneToday" class="flex flex-col sm:flex-row gap-3 mt-8">
-            <button
-              class="flex-1 px-4 py-2.5 bg-background border border-border text-ink rounded-lg font-medium hover:bg-surface hover:shadow-subtle hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
-              @click="handleShareClick"
-            >
-              <Share :size="16" />
-              {{ isShared ? 'Đã chia sẻ!' : 'Chia sẻ thành tích' }}
-            </button>
-          </div>
         </div>
 
         <VueCal

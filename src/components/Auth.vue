@@ -9,6 +9,7 @@ const auth = useAuthStore();
 
 const isLogin = ref(true);
 const username = ref('');
+const displayName = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const isLoading = ref(false);
@@ -24,7 +25,7 @@ const toggleMode = () => {
 };
 
 const handleSubmit = async () => {
-  if (!username.value || !password.value) {
+  if (!username.value || !password.value || (!isLogin.value && !displayName.value)) {
     error.value = 'Vui lòng nhập đầy đủ thông tin';
     successMessage.value = '';
     return;
@@ -48,7 +49,8 @@ const handleSubmit = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: username.value,
-        password: password.value
+        password: password.value,
+        displayName: !isLogin.value ? displayName.value : undefined
       })
     });
     
@@ -95,17 +97,33 @@ const handleSubmit = async () => {
       </div>
 
       <form @submit.prevent="handleSubmit" class="flex flex-col gap-5">
+        <div v-if="!isLogin" class="flex flex-col gap-2">
+          <label class="text-xs font-medium uppercase tracking-[0.05em] text-muted flex items-center gap-1.5">
+            <UserIcon class="w-3.5 h-3.5" /> Tên hiển thị
+          </label>
+          <input 
+            v-model="displayName" 
+            type="text" 
+            class="w-full px-3 py-2.5 bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
+            placeholder="Tên của bạn"
+          />
+        </div>
+
         <div class="flex flex-col gap-2">
           <label class="text-xs font-medium uppercase tracking-[0.05em] text-muted flex items-center gap-1.5">
             <UserIcon class="w-3.5 h-3.5" /> Tên đăng nhập
           </label>
-          <input 
-            v-model="username" 
-            type="text" 
-            class="w-full px-3 py-2.5 bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
-            placeholder="username"
-            autocomplete="username"
-          />
+          <div class="relative flex items-center">
+            <span class="absolute left-3 text-muted">@</span>
+            <input 
+              v-model="username" 
+              @input="username = username.toLowerCase()"
+              type="text" 
+              class="w-full pl-8 pr-3 py-2.5 bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
+              placeholder="username"
+              autocomplete="username"
+            />
+          </div>
         </div>
 
         <div class="flex flex-col gap-2">

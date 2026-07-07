@@ -55,13 +55,18 @@ router.post('/share', authenticateToken, async (req, res) => {
 // Get achievements feed (Public)
 router.get('/feed', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
     const achievements = await Achievement.findAll({
       order: [['createdAt', 'DESC']],
-      limit: 50,
+      limit,
+      offset,
       include: {
         model: User,
         as: 'user',
-        attributes: ['username', 'profilePic']
+        attributes: ['username', 'displayName', 'profilePic']
       }
     });
 
@@ -73,6 +78,7 @@ router.get('/feed', async (req, res) => {
       return {
         id: ach.id,
         user: ach.user?.username || 'Unknown',
+        userDisplayName: ach.user?.displayName || ach.user?.username || 'Unknown',
         profilePic: ach.user?.profilePic,
         habitName: ach.habitName,
         streak: ach.streak,
