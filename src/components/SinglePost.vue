@@ -19,7 +19,7 @@ const fetchPost = async () => {
   isLoading.value = true;
   error.value = null;
   try {
-    const res = await fetch(`http://localhost:3000/api/achievements/${route.params.id}`);
+    const res = await fetch(`/api/achievements/${route.params.id}`);
     if (!res.ok) {
       if (res.status === 404) throw new Error('Bài viết không tồn tại');
       throw new Error('Lỗi khi tải bài viết');
@@ -92,7 +92,7 @@ const cheerPost = async (event) => {
     if (amount === 0) return;
     
     try {
-      await fetch(`http://localhost:3000/api/achievements/${post.value.id}/cheer`, {
+      await fetch(`/api/achievements/${post.value.id}/cheer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount })
