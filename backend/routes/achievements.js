@@ -1,5 +1,5 @@
 const express = require('express');
-const { Achievement, User } = require('../models');
+const { Achievement, User, Comment, sequelize } = require('../models');
 const { Op } = require('sequelize');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -63,6 +63,18 @@ router.get('/feed', async (req, res) => {
       order: [['createdAt', 'DESC']],
       limit,
       offset,
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`(
+              SELECT COUNT(*)
+              FROM Comments AS comment
+              WHERE comment.achievementId = Achievement.id
+            )`),
+            'commentCount'
+          ]
+        ]
+      },
       include: {
         model: User,
         as: 'user',
@@ -85,6 +97,7 @@ router.get('/feed', async (req, res) => {
         message: ach.comment, // Map to message for frontend compat
         userInfo: parsedUserInfo,
         cheers: ach.cheers || 0,
+        commentCount: ach.dataValues.commentCount || 0,
         date: ach.createdAt,
       };
     });
@@ -120,7 +133,7 @@ router.get('/:id', async (req, res) => {
       include: {
         model: User,
         as: 'user',
-        attributes: ['username', 'profilePic']
+        attributes: ['username', 'displayName', 'profilePic']
       }
     });
 
@@ -139,6 +152,7 @@ router.get('/:id', async (req, res) => {
     res.json({
       id: achievement.id,
       user: achievement.user?.username || 'Unknown',
+      userDisplayName: achievement.user?.displayName || achievement.user?.username || 'Unknown',
       profilePic: achievement.user?.profilePic,
       habitName: achievement.habitName,
       streak: achievement.streak,
@@ -147,6 +161,116 @@ router.get('/:id', async (req, res) => {
       cheers: achievement.cheers || 0,
       date: achievement.createdAt,
     });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get comments for an achievement
+router.get('/:id/comments', async (req, res) => {
+  try {
+    const comments = await Comment.findAll({
+      where: { achievementId: req.params.id },
+      order: [['createdAt', 'DESC']],
+      include: {
+        model: User,
+        as: 'user',
+        attributes: ['username', 'displayName', 'profilePic']
+      }
+    });
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Add a comment to an achievement
+router.post('/:id/comments', authenticateToken, async (req, res) => {
+  try {
+    const { content } = req.body;
+    if (!content || content.trim() === '') {
+      return res.status(400).json({ error: 'Content cannot be empty' });
+    }
+
+    const achievement = await Achievement.findByPk(req.params.id);
+    if (!achievement) {
+      return res.status(404).json({ error: 'Achievement not found' });
+    }
+
+    const comment = await Comment.create({
+      content,
+      userId: req.user.id,
+      achievementId: achievement.id
+    });
+
+    const commentWithUser = await Comment.findByPk(comment.id, {
+      include: {
+        model: User,
+        as: 'user',
+        attributes: ['username', 'displayName', 'profilePic']
+      }
+    });
+
+    res.status(201).json(commentWithUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Edit a comment
+router.put('/:achievementId/comments/:commentId', authenticateToken, async (req, res) => {
+  try {
+    const { content } = req.body;
+    if (!content || content.trim() === '') {
+      return res.status(400).json({ error: 'Content cannot be empty' });
+    }
+
+    const comment = await Comment.findOne({
+      where: { id: req.params.commentId, achievementId: req.params.achievementId }
+    });
+
+    if (!comment) {
+      return res.status(404).json({ error: 'Comment not found' });
+    }
+
+    if (comment.userId !== req.user.id) {
+      return res.status(403).json({ error: 'You can only edit your own comments' });
+    }
+
+    comment.content = content;
+    await comment.save();
+
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Delete a comment
+router.delete('/:achievementId/comments/:commentId', authenticateToken, async (req, res) => {
+  try {
+    const comment = await Comment.findOne({
+      where: { id: req.params.commentId, achievementId: req.params.achievementId },
+      include: {
+        model: Achievement,
+        as: 'achievement',
+        attributes: ['userId']
+      }
+    });
+
+    if (!comment) {
+      return res.status(404).json({ error: 'Comment not found' });
+    }
+
+    const isCommentAuthor = comment.userId === req.user.id;
+    const isPostAuthor = comment.achievement.userId === req.user.id;
+
+    if (!isCommentAuthor && !isPostAuthor) {
+      return res.status(403).json({ error: 'You do not have permission to delete this comment' });
+    }
+
+    await comment.destroy();
+    res.json({ message: 'Comment deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

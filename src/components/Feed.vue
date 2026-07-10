@@ -3,13 +3,16 @@ import { computed, onMounted, ref } from "vue";
 import { useHabitStore } from "../stores/habitStore";
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
-import { Flame, User, PartyPopper, Share, Loader2, WifiOff } from "lucide-vue-next";
+import { Flame, User, PartyPopper, Share, Loader2, WifiOff, MessageCircle } from "lucide-vue-next";
 import { Style, Avatar } from '@dicebear/core';
 import definition from '@dicebear/styles/lorelei.json';
 import confetti from 'canvas-confetti';
 import { toast } from 'vue-sonner';
 import { useIntersectionObserver, useNetwork } from "@vueuse/core";
 import FeedSkeleton from './FeedSkeleton.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const habitStore = useHabitStore();
 const feed = computed(() => habitStore.feed);
@@ -133,9 +136,7 @@ const generateAvatar = (seed) => {
     </div>
 
     <template v-else>
-      <TransitionGroup name="list" tag="div" class="flex flex-col gap-12">
-      
-      <div v-if="feed.length === 0 && habitStore.isFeedLoading" class="w-full">
+      <div v-if="feed.length === 0 && habitStore.isFeedLoading" class="w-full flex flex-col gap-12">
         <FeedSkeleton v-for="i in 5" :key="`skeleton-${i}`" />
       </div>
 
@@ -143,16 +144,20 @@ const generateAvatar = (seed) => {
         <p class="text-lg">Ở đây yên tĩnh quá. Hãy là người đầu tiên chia sẻ thành tích!</p>
       </div>
 
+      <TransitionGroup v-else name="list" tag="div" class="flex flex-col gap-12">
+
       <div 
         v-for="post in feed" 
         :key="post.id"
-        class="group flex gap-5 items-start relative pb-12 border-b border-border/50 last:border-0 last:pb-0"
+        @click="router.push(`/feed/${post.id}`)"
+        class="group flex gap-5 items-start relative pb-12 border-b border-border/50 last:border-0 last:pb-0 cursor-pointer"
       >
         <!-- Avatar -->
         <router-link 
           v-if="post.user !== 'Unknown' && post.user !== 'You'"
           :to="`/profile/${post.user}`"
           class="shrink-0"
+          @click.stop
         >
           <div 
             v-if="generateAvatar(post.profilePic)" 
@@ -182,6 +187,7 @@ const generateAvatar = (seed) => {
                 v-if="post.user !== 'Unknown' && post.user !== 'You'"
                 :to="`/profile/${post.user}`" 
                 class="font-medium text-ink text-base tracking-tight hover:underline underline-offset-4 decoration-2 decoration-border"
+                @click.stop
               >
                 {{ post.userDisplayName || post.user }}
               </router-link>
@@ -204,7 +210,7 @@ const generateAvatar = (seed) => {
           <div class="flex flex-wrap items-center gap-2 mt-2">
             <!-- Cheer Button -->
             <button 
-              @click="(e) => cheerPost(post, e)"
+              @click.stop="(e) => cheerPost(post, e)"
               class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all active:scale-[0.96] select-none"
               :class="post.cheered ? 'bg-accent-yellow-bg text-accent-yellow-text' : 'bg-gray-100 text-muted hover:bg-gray-200 hover:text-ink'"
             >
@@ -223,9 +229,17 @@ const generateAvatar = (seed) => {
               <span>&times; {{ post.streak || 0 }}</span>
             </div>
 
+            <!-- Comments Count -->
+            <button 
+              class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-100 text-muted hover:bg-gray-200 hover:text-ink rounded-lg text-xs font-semibold tracking-wide transition-all active:scale-[0.96] select-none"
+            >
+              <MessageCircle :size="14" class="opacity-90" />
+              <span>{{ post.commentCount || 0 }}</span>
+            </button>
+
             <!-- Share Button -->
             <button 
-              @click="copyLink(post.id)"
+              @click.stop="copyLink(post.id)"
               class="ml-auto flex items-center justify-center w-8 h-8 bg-canvas border border-border text-muted hover:bg-surface hover:text-ink rounded-lg transition-all active:scale-[0.96]"
               title="Chia sẻ liên kết"
             >
@@ -255,6 +269,6 @@ const generateAvatar = (seed) => {
   transform: translateY(30px);
 }
 .list-leave-active {
-  position: absolute;
+  display: none;
 }
 </style>

@@ -92,6 +92,20 @@ const Habit = sequelize.define('Habit', {
   timestamps: true // adds createdAt, updatedAt
 });
 
+const Comment = sequelize.define('Comment', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  content: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  }
+}, {
+  timestamps: true
+});
+
 // Relationships
 User.hasMany(Achievement, { foreignKey: 'userId', as: 'achievements' });
 Achievement.belongsTo(User, { foreignKey: 'userId', as: 'user' });
@@ -99,9 +113,16 @@ Achievement.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 User.hasMany(Habit, { foreignKey: 'userId', as: 'habits', onDelete: 'CASCADE' });
 Habit.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
+User.hasMany(Comment, { foreignKey: 'userId', as: 'comments', onDelete: 'CASCADE' });
+Comment.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+Achievement.hasMany(Comment, { foreignKey: 'achievementId', as: 'comments', onDelete: 'CASCADE' });
+Comment.belongsTo(Achievement, { foreignKey: 'achievementId', as: 'achievement' });
+
 module.exports = {
   sequelize,
   User,
   Achievement,
-  Habit
+  Habit,
+  Comment
 };

@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { useHabitStore } from '../stores/habitStore';
+import { calculateCurrentStreak } from '../utils/habitUtils';
 import { X, Share, LogIn } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 
@@ -55,7 +56,7 @@ const handleShare = async () => {
       },
       body: JSON.stringify({
         habitName: props.habit.name,
-        streak: props.habit.datesDone?.length || 0,
+        streak: calculateCurrentStreak(props.habit.datesDone),
         comment: comment.value || "Đã hoàn thành mục tiêu hôm nay!"
       })
     });
@@ -106,7 +107,7 @@ const handleShare = async () => {
         <div class="mb-4">
           <label class="block text-xs font-medium uppercase tracking-[0.05em] text-muted mb-2">Thói quen</label>
           <div class="p-3 bg-canvas border border-border rounded-md text-sm text-ink font-medium">
-            🔥 {{ habit.name }} (Chuỗi: {{ habit.datesDone?.length || 0 }} ngày)
+            🔥 {{ habit.name }} (Chuỗi: {{ calculateCurrentStreak(habit.datesDone) }} ngày)
           </div>
         </div>
         

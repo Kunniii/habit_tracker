@@ -51,7 +51,7 @@ router.post('/login', async (req, res) => {
 
     const jwt = await new SignJWT({ id: user.id, username: user.username })
       .setProtectedHeader({ alg: 'HS256' })
-      .setExpirationTime('24h')
+      .setExpirationTime('14d')
       .sign(secret);
 
     res.json({ token: jwt, username: user.username });

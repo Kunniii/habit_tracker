@@ -74,9 +74,6 @@ app.get('/api/achievements/:id/og-image', async (req, res) => {
     
     // Process message similar to frontend
     let message = achievement.comment || 'Đã hoàn thành một thói quen!';
-    if (message === 'Completed a habit!') message = 'Đã hoàn thành một thói quen!';
-    if (message === 'I just crushed my daily goal!') message = 'Tôi vừa hoàn thành mục tiêu hàng ngày!';
-    if (message === "I'm staying consistent!") message = 'Tôi đang giữ được sự kiên trì!';
     
     // Create element structure for Satori resembling SinglePost
     const element = {
@@ -89,7 +86,7 @@ app.get('/api/achievements/:id/og-image', async (req, res) => {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#F9FAFB', // canvas color roughly
-          fontFamily: 'Geist',
+          fontFamily: 'Playfair Display',
         },
         children: [
           {
@@ -237,7 +234,7 @@ app.get('/api/achievements/:id/og-image', async (req, res) => {
                                   fontSize: '20px',
                                   fontWeight: 700,
                                 },
-                                children: `🔥 × ${achievement.streak}`
+                                children: `x${achievement.streak}🔥`
                               }
                             }
                           ]

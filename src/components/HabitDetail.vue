@@ -9,6 +9,7 @@
   import VueCal from "vue-cal";
   import "vue-cal/dist/vuecal.css";
   import confetti from "canvas-confetti";
+  import { calculateCurrentStreak } from '../utils/habitUtils';
 
   const route = useRoute();
   const router = useRouter();
@@ -83,16 +84,7 @@
   };
 
   const currentStreak = computed(() => {
-    const dates = habit.value?.datesDone || [];
-    if (dates.length === 0) return 0;
-    const today = format(new Date(), "yyyy-MM-dd");
-    let streak = 0;
-    let date = new Date(today);
-    while (dates.includes(format(date, "yyyy-MM-dd"))) {
-      streak++;
-      date.setDate(date.getDate() - 1);
-    }
-    return streak;
+    return calculateCurrentStreak(habit.value?.datesDone);
   });
 
   const longestStreak = computed(() => {

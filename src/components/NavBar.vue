@@ -7,6 +7,8 @@ import { useHabitStore } from '../stores/habitStore';
 import { Style, Avatar } from '@dicebear/core';
 import definition from '@dicebear/styles/lorelei.json';
 import { onClickOutside } from '@vueuse/core';
+import { format } from 'date-fns';
+import { vi } from 'date-fns/locale';
 import { toast } from 'vue-sonner';
 
 const router = useRouter();
@@ -23,6 +25,8 @@ const pageTitle = computed(() => {
   if (route.path.startsWith('/edit')) return 'Chỉnh sửa';
   return '';
 });
+
+const todayDate = format(new Date(), "EEEE, dd 'tháng' MM", { locale: vi });
 
 const dropdownRef = ref(null);
 const isDropdownOpen = ref(false);
@@ -99,26 +103,27 @@ const avatarSvg = computed(() => {
 
 <template>
   <nav class="bg-surface/80 backdrop-blur-xl border-b border-white/40 shadow-[0_2px_10px_rgba(0,0,0,0.02)] px-4 py-3 select-none sticky top-0 z-[100]">
-    <div class="container mx-auto max-w-5xl flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <RouterLink to="/" class="flex items-center gap-2 text-ink hover:text-muted transition-colors">
-          <img src="/favicon.png" alt="HabitFlow" class="w-7 h-7 object-contain rounded-md" />
-          <span class="font-display text-2xl font-semibold tracking-tight italic" :class="pageTitle ? 'hidden sm:block' : ''">HabitFlow</span>
-        </RouterLink>
+    <div class="container mx-auto max-w-5xl relative flex justify-between items-center h-8">
+      
+      <!-- Left side: Date & Context -->
+      <div class="flex items-center gap-3 w-1/3">
+        <span class="text-sm font-medium text-muted capitalize hidden sm:block">{{ todayDate }}</span>
         <template v-if="pageTitle">
-          <span class="text-muted/30 select-none">/</span>
+          <span class="text-muted/30 select-none hidden sm:block">/</span>
           <span class="text-ink font-display text-lg tracking-tight font-medium">{{ pageTitle }}</span>
         </template>
       </div>
-      <div class="flex items-center gap-6">
-        <RouterLink to="/feed" class="text-muted hover:text-ink transition-colors flex items-center justify-center p-2 rounded-md hover:bg-gray-50"
-          active-class="text-ink bg-gray-50" title="Cộng đồng">
-          <Globe class="w-5 h-5" />
+
+      <!-- Center: Logo -->
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+        <RouterLink to="/" class="flex items-center gap-2 text-ink hover:text-muted transition-colors">
+          <img src="/favicon.png" alt="HabitFlow" class="w-6 h-6 object-contain rounded-md" />
+          <span class="font-display text-xl font-semibold tracking-tight italic hidden sm:block">HabitFlow</span>
         </RouterLink>
-        <RouterLink to="/dashboard" class="text-muted hover:text-ink transition-colors flex items-center justify-center p-2 rounded-md hover:bg-gray-50"
-          active-class="text-ink bg-gray-50" title="Thói quen của tôi">
-          <LayoutDashboard class="w-5 h-5" />
-        </RouterLink>
+      </div>
+
+      <!-- Right side: Avatar dropdown -->
+      <div class="flex items-center justify-end w-1/3 gap-4">
         <div class="relative" ref="dropdownRef">
           <button @click="handleAvatarClick"
             class="flex items-center gap-2 text-sm font-medium text-muted hover:text-ink transition-colors focus:outline-none">

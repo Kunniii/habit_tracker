@@ -1,5 +1,6 @@
 <script setup>
   import NavBar from "./components/NavBar.vue";
+  import BottomNav from "./components/BottomNav.vue";
   import { Toaster, toast } from 'vue-sonner';
   import { useNetwork } from '@vueuse/core';
   import { watch } from 'vue';
@@ -27,11 +28,12 @@
 <template>
   <div class="min-h-[100dvh] bg-canvas text-ink font-sans selection:bg-ink selection:text-white">
     <NavBar />
-    <RouterView v-slot="{ Component }">
+    <RouterView v-slot="{ Component, route }">
       <Transition name="page" mode="out-in">
-        <component :is="Component" />
+        <component :is="Component" :key="route.path" />
       </Transition>
     </RouterView>
+    <BottomNav />
     <Toaster richColors position="top-center" />
   </div>
 </template>

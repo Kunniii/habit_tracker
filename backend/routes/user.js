@@ -1,6 +1,7 @@
 const express = require('express');
 const { User } = require('../models');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken, secret } = require('../middleware/auth');
+const { SignJWT } = require('jose');
 
 const router = express.Router();
 
@@ -14,6 +15,16 @@ router.get('/profile', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+
+    // Sliding expiration: Issue a new token valid for 14 days
+    const newToken = await new SignJWT({ id: req.user.id, username: user.username })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime('14d')
+      .sign(secret);
+
+    // Expose header so CORS frontend can read it
+    res.setHeader('Access-Control-Expose-Headers', 'X-New-Token');
+    res.setHeader('X-New-Token', newToken);
 
     res.json(user);
   } catch (error) {

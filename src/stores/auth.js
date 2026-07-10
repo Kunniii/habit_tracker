@@ -12,10 +12,15 @@ export const useAuthStore = defineStore('auth', () => {
         headers: { 'Authorization': `Bearer ${token.value}` }
       });
       if (res.ok) {
+        const newToken = res.headers.get('X-New-Token');
+        if (newToken) {
+          token.value = newToken;
+          localStorage.setItem('token', newToken);
+        }
         user.value = await res.json();
       } else {
-        // Token might be invalid
-        if (res.status === 401 || res.status === 403) {
+        // Token might be invalid or user deleted
+        if (res.status === 401 || res.status === 403 || res.status === 404) {
           token.value = null;
           localStorage.removeItem('token');
           user.value = null;
