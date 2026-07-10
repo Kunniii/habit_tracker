@@ -10,13 +10,25 @@ const habitRoutes = require('./routes/habits');
 const { sequelize, Achievement, User } = require('./models');
 const satori = require('satori').default || require('satori');
 const { Resvg } = require('@resvg/resvg-js');
+const https = require('https');
 
-let interRegular, interBold;
+let geistRegular, geistBold, playfairRegular, playfairBold, interViRegular, interViBold;
 try {
-  interRegular = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'inter', 'files', 'inter-latin-400-normal.woff'));
-  interBold = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'inter', 'files', 'inter-latin-700-normal.woff'));
+  geistRegular = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'geist-sans', 'files', 'geist-sans-latin-400-normal.woff'));
+  geistBold = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'geist-sans', 'files', 'geist-sans-latin-700-normal.woff'));
+  interViRegular = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'inter', 'files', 'inter-vietnamese-400-normal.woff'));
+  interViBold = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'inter', 'files', 'inter-vietnamese-700-normal.woff'));
+  
+  // Try loading Vietnamese subset for Playfair, fallback to Latin
+  try {
+    playfairRegular = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'playfair-display', 'files', 'playfair-display-vietnamese-400-normal.woff'));
+    playfairBold = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'playfair-display', 'files', 'playfair-display-vietnamese-700-normal.woff'));
+  } catch(e) {
+    playfairRegular = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'playfair-display', 'files', 'playfair-display-latin-400-normal.woff'));
+    playfairBold = fs.readFileSync(path.join(__dirname, 'node_modules', '@fontsource', 'playfair-display', 'files', 'playfair-display-latin-700-normal.woff'));
+  }
 } catch (e) {
-  console.warn('Could not load Inter font', e);
+  console.warn('Could not load fonts', e);
 }
 
 const app = express();
@@ -54,7 +66,7 @@ app.get('/api/achievements/:id/og-image', async (req, res) => {
       include: { model: User, as: 'user', attributes: ['username', 'displayName'] }
     });
 
-    if (!achievement || !interRegular) {
+    if (!achievement || !geistRegular || !playfairRegular) {
       return res.status(404).send('Not found');
     }
 
@@ -77,7 +89,7 @@ app.get('/api/achievements/:id/og-image', async (req, res) => {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#F9FAFB', // canvas color roughly
-          fontFamily: 'Inter',
+          fontFamily: 'Geist',
         },
         children: [
           {
@@ -163,6 +175,7 @@ app.get('/api/achievements/:id/og-image', async (req, res) => {
                         type: 'div',
                         props: {
                           style: {
+                            fontFamily: '"Playfair Display"',
                             fontSize: '36px',
                             fontWeight: 700,
                             color: '#111827',
@@ -244,9 +257,36 @@ app.get('/api/achievements/:id/og-image', async (req, res) => {
       width: 1200,
       height: 630,
       fonts: [
-        { name: 'Inter', data: interRegular, weight: 400, style: 'normal' },
-        { name: 'Inter', data: interBold, weight: 700, style: 'normal' },
+        { name: 'Geist', data: geistRegular, weight: 400, style: 'normal' },
+        { name: 'Geist', data: geistBold, weight: 700, style: 'normal' },
+        { name: 'Playfair Display', data: playfairRegular, weight: 400, style: 'normal' },
+        { name: 'Playfair Display', data: playfairBold, weight: 700, style: 'normal' },
+        { name: 'Geist', data: interViRegular, weight: 400, style: 'normal' },
+        { name: 'Geist', data: interViBold, weight: 700, style: 'normal' },
+        { name: 'Playfair Display', data: interViRegular, weight: 400, style: 'normal' },
+        { name: 'Playfair Display', data: interViBold, weight: 700, style: 'normal' },
       ],
+      loadAdditionalAsset: async (code, segment) => {
+        if (code === 'emoji') {
+          // get the unicode hex code of the emoji
+          let codePoint = '';
+          if (segment.length === 2) {
+            // handle surrogate pairs
+            codePoint = ((segment.charCodeAt(0) - 0xd800) * 0x400 + (segment.charCodeAt(1) - 0xdc00) + 0x10000).toString(16);
+          } else {
+            codePoint = segment.codePointAt(0).toString(16);
+          }
+          // Fetch the Twemoji SVG
+          return new Promise((resolve) => {
+            https.get(`https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${codePoint}.svg`, (res) => {
+              let data = '';
+              res.on('data', chunk => data += chunk);
+              res.on('end', () => resolve(data));
+            }).on('error', () => resolve(null));
+          });
+        }
+        return null;
+      }
     });
 
     const resvg = new Resvg(svg, {

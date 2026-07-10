@@ -12,7 +12,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@fontsource/geist-sans": "^5.2.5",
     "@fontsource/inter": "^5.2.8",
+    "@fontsource/playfair-display": "^5.2.8",
     "@resvg/resvg-js": "^2.6.2",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",

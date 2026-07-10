@@ -2,10 +2,20 @@
 # yarn lockfile v1
 
 
+"@fontsource/geist-sans@^5.2.5":
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/geist-sans/-/geist-sans-5.2.5.tgz#025bd279367f7b58c2875d2ef12bd369cbd8602a"
+  integrity sha512-anllOHyJbElRs9fV15TeDRqAeb1IKm4bSknPl6ZMoyPTx1BBy7logudcUwpNjmQLkzn4Q0JGQLRCUKJYoyST6A==
+
 "@fontsource/inter@^5.2.8":
   version "5.2.8"
   resolved "https://registry.yarnpkg.com/@fontsource/inter/-/inter-5.2.8.tgz#10c95d877d972c7de5bd4592309d42fb6a5e1a5b"
   integrity sha512-P6r5WnJoKiNVV+zvW2xM13gNdFhAEpQ9dQJHt3naLvfg+LkF2ldgSLiF4T41lf1SQCM9QmkqPTn4TH568IRagg==
+
+"@fontsource/playfair-display@^5.2.8":
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/@fontsource/playfair-display/-/playfair-display-5.2.8.tgz#2a52c42d29a160bc2de6104d01f3c3fdccdcb5f7"
+  integrity sha512-fUEhib70SszNhQVsGbUMSsWJhr7Je0rdeuZdtGpDNu0GKF1xJM8QhpI/y0pckU25GcChXm9TLOmeZupkvvZo2g==
 
 "@isaacs/fs-minipass@^4.0.0":
   version "4.0.1"
