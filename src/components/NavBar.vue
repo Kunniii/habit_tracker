@@ -102,15 +102,15 @@ const avatarSvg = computed(() => {
 </script>
 
 <template>
-  <nav class="bg-surface/80 backdrop-blur-xl border-b border-white/40 shadow-[0_2px_10px_rgba(0,0,0,0.02)] px-4 py-3 select-none sticky top-0 z-[100]">
+  <nav class="bg-surface/80 backdrop-blur-xl border-b border-white/40 shadow-[0_2px_10px_rgba(0,0,0,0.02)] px-3 sm:px-4 py-3 select-none sticky top-0 z-[100]">
     <div class="container mx-auto max-w-5xl relative flex justify-between items-center h-8">
       
       <!-- Left side: Date & Context -->
-      <div class="flex items-center gap-3 w-1/3">
+      <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
         <span class="text-sm font-medium text-muted capitalize hidden sm:block">{{ todayDate }}</span>
         <template v-if="pageTitle">
           <span class="text-muted/30 select-none hidden sm:block">/</span>
-          <span class="text-ink font-display text-lg tracking-tight font-medium">{{ pageTitle }}</span>
+          <span class="text-ink font-display text-base sm:text-lg tracking-tight font-medium truncate">{{ pageTitle }}</span>
         </template>
       </div>
 
@@ -123,11 +123,11 @@ const avatarSvg = computed(() => {
       </div>
 
       <!-- Right side: Avatar dropdown -->
-      <div class="flex items-center justify-end w-1/3 gap-4">
+      <div class="flex items-center justify-end flex-1 min-w-0 gap-2 sm:gap-4">
         <div class="relative" ref="dropdownRef">
           <button @click="handleAvatarClick"
             class="flex items-center gap-2 text-sm font-medium text-muted hover:text-ink transition-colors focus:outline-none">
-            <div v-if="avatarSvg" class="w-8 h-8 bg-gray-100 rounded-full overflow-hidden border border-border"
+            <div v-if="avatarSvg" class="w-7 h-7 sm:w-8 sm:h-8 bg-gray-100 rounded-full overflow-hidden border border-border shrink-0"
               v-html="avatarSvg"></div>
             <User v-else class="w-5 h-5" />
           </button>

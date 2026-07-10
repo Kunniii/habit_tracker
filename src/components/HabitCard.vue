@@ -102,7 +102,7 @@
 <template>
   <div 
     v-if="habit" 
-    :class="['rounded-xl p-5 flex flex-col justify-between transition hover:shadow-subtle group', isDoneToday ? 'bg-[#EDF3EC]/40 border border-[#346538]/20' : 'bg-surface border border-border']"
+    :class="['rounded-xl p-4 sm:p-5 flex flex-col justify-between transition hover:shadow-subtle group', isDoneToday ? 'bg-[#EDF3EC]/40 border border-[#346538]/20' : 'bg-surface border border-border']"
   >
     <div>
       <div class="flex justify-between items-start mb-4">
@@ -130,18 +130,18 @@
         </div>
       </div>
 
-      <div class="flex gap-4 mb-6">
-        <div class="flex-1 bg-canvas border border-border rounded-lg p-3 text-center">
-           <span class="block text-xs uppercase tracking-widest text-muted mb-1">Hiện tại</span>
-           <div class="flex items-center justify-center gap-1.5">
-             <span class="text-xl font-semibold">{{ currentStreak }}</span>
-             <Flame :size="18" :class="currentStreak > 0 ? 'text-accent-red-text fill-accent-red-bg' : 'text-muted'" />
+      <div class="flex gap-2 sm:gap-4 mb-4 sm:mb-6">
+        <div class="flex-1 bg-canvas border border-border rounded-lg p-2 sm:p-3 text-center">
+           <span class="block text-[10px] sm:text-xs uppercase tracking-widest text-muted mb-1">Hiện tại</span>
+           <div class="flex items-center justify-center gap-1 sm:gap-1.5">
+             <span class="text-lg sm:text-xl font-semibold">{{ currentStreak }}</span>
+             <Flame :size="16" class="sm:w-[18px] sm:h-[18px]" :class="currentStreak > 0 ? 'text-accent-red-text fill-accent-red-bg' : 'text-muted'" />
            </div>
         </div>
-        <div class="flex-1 bg-canvas border border-border rounded-lg p-3 text-center">
-           <span class="block text-xs uppercase tracking-widest text-muted mb-1">Kỷ lục</span>
-           <div class="flex items-center justify-center gap-1.5">
-             <span class="text-xl font-semibold">{{ longestStreak }}</span>
+        <div class="flex-1 bg-canvas border border-border rounded-lg p-2 sm:p-3 text-center">
+           <span class="block text-[10px] sm:text-xs uppercase tracking-widest text-muted mb-1">Kỷ lục</span>
+           <div class="flex items-center justify-center gap-1 sm:gap-1.5">
+             <span class="text-lg sm:text-xl font-semibold">{{ longestStreak }}</span>
            </div>
         </div>
       </div>

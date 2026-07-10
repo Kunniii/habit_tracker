@@ -108,7 +108,7 @@
 </script>
 
 <template>
-  <div class="container mx-auto p-4 max-w-3xl pt-8 pb-24">
+  <div class="container mx-auto px-3 sm:px-4 max-w-3xl pt-6 sm:pt-8 pb-24">
     <div class="mb-8">
       <button @click="goBack" class="inline-flex items-center gap-2 text-muted hover:text-ink transition-colors font-medium text-sm px-3 py-2 -ml-3 rounded-lg hover:bg-gray-50">
         <ArrowLeft :size="16" />
@@ -116,13 +116,13 @@
       </button>
     </div>
     
-    <div v-if="habit" class="bg-surface border border-border rounded-xl p-8">
-      <div class="flex justify-between items-start mb-8">
+    <div v-if="habit" class="bg-surface border border-border rounded-xl p-5 sm:p-8">
+      <div class="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0 mb-6 sm:mb-8">
         <div>
-           <div class="inline-flex items-center gap-2 px-3 py-1 mb-4 border border-border rounded-full text-xs uppercase tracking-widest font-mono text-muted">
+           <div class="inline-flex items-center gap-2 px-3 py-1 mb-4 border border-border rounded-full text-[10px] sm:text-xs uppercase tracking-widest font-mono text-muted">
               Chi tiết thói quen
             </div>
-          <h1 class="text-4xl font-display tracking-tight font-medium text-ink">{{ habit.name }}</h1>
+          <h1 class="text-3xl sm:text-4xl font-display tracking-tight font-medium text-ink">{{ habit.name }}</h1>
         </div>
         <div class="flex gap-2">
           <button
@@ -162,23 +162,23 @@
         v-html="renderedDescription"
       ></div>
 
-      <div class="flex gap-4 mb-8">
-        <div class="flex-1 bg-canvas border border-border rounded-lg p-4 text-center">
-           <span class="block text-xs uppercase tracking-widest text-muted mb-2">Chuỗi hiện tại</span>
-           <div class="flex items-center justify-center gap-2">
-             <span class="text-3xl font-medium tracking-tight text-ink">{{ currentStreak }}</span>
-             <Flame :size="24" :class="currentStreak > 0 ? 'text-accent-red-text fill-accent-red-bg' : 'text-muted'" />
+      <div class="flex gap-2 sm:gap-4 mb-6 sm:mb-8">
+        <div class="flex-1 bg-canvas border border-border rounded-lg p-3 sm:p-4 text-center">
+           <span class="block text-[10px] sm:text-xs uppercase tracking-widest text-muted mb-2">Chuỗi hiện tại</span>
+           <div class="flex items-center justify-center gap-1.5 sm:gap-2">
+             <span class="text-2xl sm:text-3xl font-medium tracking-tight text-ink">{{ currentStreak }}</span>
+             <Flame :size="24" class="w-5 h-5 sm:w-6 sm:h-6" :class="currentStreak > 0 ? 'text-accent-red-text fill-accent-red-bg' : 'text-muted'" />
            </div>
         </div>
-        <div class="flex-1 bg-canvas border border-border rounded-lg p-4 text-center">
-           <span class="block text-xs uppercase tracking-widest text-muted mb-2">Chuỗi dài nhất</span>
-           <div class="flex items-center justify-center gap-2">
-             <span class="text-3xl font-medium tracking-tight text-ink">{{ longestStreak }}</span>
+        <div class="flex-1 bg-canvas border border-border rounded-lg p-3 sm:p-4 text-center">
+           <span class="block text-[10px] sm:text-xs uppercase tracking-widest text-muted mb-2">Chuỗi dài nhất</span>
+           <div class="flex items-center justify-center gap-1.5 sm:gap-2">
+             <span class="text-2xl sm:text-3xl font-medium tracking-tight text-ink">{{ longestStreak }}</span>
            </div>
         </div>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-4 mb-12 h-[50px]">
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 h-auto sm:h-[50px]">
         <button
           v-if="!isDoneToday"
           @click="markAsDone"

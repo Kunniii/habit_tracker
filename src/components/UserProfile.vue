@@ -150,25 +150,25 @@ watch(() => route.query.mode, (newMode) => {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto p-6 mt-8">
-    <div class="bg-surface border border-border rounded-xl p-8 shadow-sm">
+  <div class="max-w-2xl mx-auto px-3 sm:px-6 py-4 mt-4 sm:mt-8 pb-24">
+    <div class="bg-surface border border-border rounded-xl p-5 sm:p-8 shadow-sm">
       <div v-if="isLoading" class="text-center py-8 text-muted">Đang tải...</div>
       
       <div v-else-if="mode === 'view'">
         <div class="flex flex-col items-center mb-6 gap-4">
-          <div v-if="avatarSvg" class="w-32 h-32 bg-gray-100 rounded-[2rem] overflow-hidden border border-border shadow-subtle ring-4 ring-surface" v-html="avatarSvg"></div>
-          <div v-else class="w-32 h-32 bg-gray-100 rounded-[2rem] flex items-center justify-center border border-border shadow-subtle ring-4 ring-surface">
-            <UserIcon class="w-12 h-12 text-muted" />
+          <div v-if="avatarSvg" class="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-[2rem] overflow-hidden border border-border shadow-subtle ring-4 ring-surface" v-html="avatarSvg"></div>
+          <div v-else class="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-[2rem] flex items-center justify-center border border-border shadow-subtle ring-4 ring-surface">
+            <UserIcon class="w-10 h-10 sm:w-12 sm:h-12 text-muted" />
           </div>
           
           <div class="text-center mt-2">
-            <h2 class="font-playwrite text-2xl text-ink font-medium tracking-wide">{{ displayName }}</h2>
+            <h2 class="font-playwrite text-xl sm:text-2xl text-ink font-medium tracking-wide">{{ displayName }}</h2>
             <p class="text-sm text-muted mt-1">@{{ username }}</p>
           </div>
         </div>
 
         <div class="mb-8 text-center max-w-lg mx-auto">
-          <p class="text-lg leading-relaxed whitespace-pre-wrap font-playwrite" :class="bio ? 'text-ink' : 'text-muted italic'">
+          <p class="text-base sm:text-lg leading-relaxed whitespace-pre-wrap font-playwrite" :class="bio ? 'text-ink' : 'text-muted italic'">
             {{ bio || 'Chưa có thông tin giới thiệu.' }}
           </p>
         </div>
@@ -176,9 +176,9 @@ watch(() => route.query.mode, (newMode) => {
 
       <div v-else-if="mode === 'edit'">
         <div class="flex flex-col items-center mb-8 gap-4">
-          <div v-if="avatarSvg" class="w-32 h-32 bg-gray-100 rounded-[2rem] overflow-hidden border border-border ring-4 ring-surface shadow-subtle" v-html="avatarSvg"></div>
-          <div v-else class="w-32 h-32 bg-gray-100 rounded-[2rem] flex items-center justify-center border border-border ring-4 ring-surface shadow-subtle">
-             <UserIcon class="w-12 h-12 text-muted" />
+          <div v-if="avatarSvg" class="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-[2rem] overflow-hidden border border-border ring-4 ring-surface shadow-subtle" v-html="avatarSvg"></div>
+          <div v-else class="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-[2rem] flex items-center justify-center border border-border ring-4 ring-surface shadow-subtle">
+             <UserIcon class="w-10 h-10 sm:w-12 sm:h-12 text-muted" />
           </div>
           <button 
             @click="randomizeAvatar"
@@ -194,7 +194,7 @@ watch(() => route.query.mode, (newMode) => {
             v-model="displayName"
             type="text"
             placeholder="Tên của bạn"
-            class="w-full px-4 py-3 bg-background border border-border rounded-lg text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-ink"
+            class="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-[16px] sm:text-sm bg-background border border-border rounded-lg text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-ink"
           />
         </div>
 
@@ -204,7 +204,7 @@ watch(() => route.query.mode, (newMode) => {
             v-model="bio"
             rows="4"
             placeholder="Hãy viết vài dòng về bạn..."
-            class="font-playwrite w-full px-4 py-3 bg-background border border-border rounded-lg text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-ink"
+            class="font-playwrite w-full px-3 sm:px-4 py-2.5 sm:py-3 text-[16px] sm:text-sm bg-background border border-border rounded-lg text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-ink"
           ></textarea>
         </div>
 

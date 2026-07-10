@@ -260,7 +260,7 @@ const generateAvatar = (seed) => {
     <div class="container mx-auto max-w-2xl w-full h-full flex flex-col">
       
       <!-- Top Fixed Area (Post Detail) -->
-      <div class="flex-none px-4 pt-4 shrink-0 bg-canvas z-10 shadow-sm border-b border-border">
+      <div class="flex-none px-3 sm:px-4 pt-3 sm:pt-4 shrink-0 bg-canvas z-10 shadow-sm border-b border-border">
         <div class="mb-4">
           <button @click="router.push('/feed')" class="inline-flex items-center gap-2 text-muted hover:text-ink transition-colors font-medium text-sm px-3 py-2 -ml-3 rounded-lg hover:bg-gray-50">
             <ArrowLeft :size="16" />
@@ -279,7 +279,7 @@ const generateAvatar = (seed) => {
           <button @click="router.push('/feed')" class="mt-4 px-4 py-2 bg-ink text-white rounded-lg text-sm font-medium">Về trang chủ</button>
         </div>
 
-        <div v-else-if="post" class="flex gap-5 items-start relative pb-6">
+        <div v-else-if="post" class="flex gap-3 sm:gap-5 items-start relative pb-4 sm:pb-6">
           <!-- Avatar -->
           <router-link 
             v-if="post.user !== 'Unknown' && post.user !== 'You'"
@@ -288,21 +288,21 @@ const generateAvatar = (seed) => {
           >
             <div 
               v-if="generateAvatar(post.profilePic)" 
-              class="w-12 h-12 rounded-[1rem] overflow-hidden bg-canvas border border-border ring-2 ring-surface shadow-subtle transition-transform group-hover:scale-105"
+              class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-[1rem] overflow-hidden bg-canvas border border-border ring-2 ring-surface shadow-subtle transition-transform group-hover:scale-105"
               v-html="generateAvatar(post.profilePic)"
             ></div>
-            <div v-else class="w-12 h-12 rounded-[1rem] bg-canvas flex items-center justify-center border border-border ring-2 ring-surface shadow-subtle transition-transform group-hover:scale-105">
-              <User :size="20" class="text-muted" />
+            <div v-else class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-[1rem] bg-canvas flex items-center justify-center border border-border ring-2 ring-surface shadow-subtle transition-transform group-hover:scale-105">
+              <User :size="20" class="text-muted sm:w-5 sm:h-5" />
             </div>
           </router-link>
           <div v-else class="shrink-0">
             <div 
               v-if="generateAvatar(post.profilePic)" 
-              class="w-12 h-12 rounded-[1rem] overflow-hidden bg-canvas border border-border ring-2 ring-surface shadow-subtle"
+              class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-[1rem] overflow-hidden bg-canvas border border-border ring-2 ring-surface shadow-subtle"
               v-html="generateAvatar(post.profilePic)"
             ></div>
-            <div v-else class="w-12 h-12 rounded-[1rem] bg-canvas flex items-center justify-center border border-border ring-2 ring-surface shadow-subtle">
-              <User :size="20" class="text-muted" />
+            <div v-else class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-[1rem] bg-canvas flex items-center justify-center border border-border ring-2 ring-surface shadow-subtle">
+              <User :size="20" class="text-muted sm:w-5 sm:h-5" />
             </div>
           </div>
 
@@ -364,24 +364,24 @@ const generateAvatar = (seed) => {
       </div>
 
       <!-- Middle Scrollable Area (Comments List) -->
-      <div class="flex-1 overflow-y-auto px-4 py-6 bg-surface/30 overflow-x-hidden">
+      <div class="flex-1 overflow-y-auto px-3 sm:px-4 py-4 sm:py-6 bg-surface/30 overflow-x-hidden">
         <h3 class="text-sm font-semibold text-ink mb-4 uppercase tracking-wider">Bình luận ({{ comments.length }})</h3>
         <TransitionGroup name="comment-list" tag="div" class="flex flex-col gap-4 relative">
-          <div v-for="comment in comments" :key="comment.id" class="flex gap-3 w-full">
+          <div v-for="comment in comments" :key="comment.id" class="flex gap-2 sm:gap-3 w-full">
             <router-link :to="`/profile/${comment.user?.username || 'Unknown'}`" class="shrink-0">
               <div 
                 v-if="generateAvatar(comment.user?.profilePic)" 
-                class="w-8 h-8 rounded-lg overflow-hidden bg-canvas border border-border ring-1 ring-surface shadow-sm"
+                class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg overflow-hidden bg-canvas border border-border ring-1 ring-surface shadow-sm shrink-0"
                 v-html="generateAvatar(comment.user?.profilePic)"
               ></div>
-              <div v-else class="w-8 h-8 rounded-lg bg-canvas flex items-center justify-center border border-border ring-1 ring-surface shadow-sm">
-                <User :size="16" class="text-muted" />
+              <div v-else class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-canvas flex items-center justify-center border border-border ring-1 ring-surface shadow-sm shrink-0">
+                <User :size="16" class="text-muted w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
             </router-link>
             
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <div 
-                class="bg-canvas p-3 relative group shadow-sm transition-all duration-300"
+                class="bg-canvas p-2.5 sm:p-3 relative group shadow-sm transition-all duration-300"
                 :class="deletingCommentId === comment.id ? 'rounded-2xl border-[3px] border-accent-red-text border-dashed animate-shake shadow-[0_0_15px_rgba(248,113,113,0.2)]' : 'rounded-2xl rounded-tl-none border border-border border-solid'"
               >
                 <div class="flex justify-between items-baseline mb-1.5">
@@ -449,19 +449,19 @@ const generateAvatar = (seed) => {
       </div>
 
       <!-- Bottom Fixed Area (Comment Form) -->
-      <div v-if="post" class="flex-none p-4 pb-24 shrink-0 bg-transparent z-10 relative">
+      <div v-if="post" class="flex-none p-3 sm:p-4 pb-24 shrink-0 bg-transparent z-10 relative">
         <div class="max-w-[800px] mx-auto w-full">
           <!-- Auth form -->
-          <div v-if="!!authStore.token" class="flex gap-3 p-2 bg-surface/80 backdrop-blur-xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] rounded-[2rem] items-center">
+          <div v-if="!!authStore.token" class="flex gap-2 sm:gap-3 p-1.5 sm:p-2 bg-surface/80 backdrop-blur-xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] rounded-[2rem] items-center">
             <!-- Avatar -->
             <div class="shrink-0 ml-1 flex items-center">
               <div 
                 v-if="generateAvatar(authStore.user?.profilePic)" 
-                class="w-9 h-9 rounded-full overflow-hidden bg-canvas border border-border shadow-sm flex items-center justify-center"
+                class="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden bg-canvas border border-border shadow-sm flex items-center justify-center shrink-0"
                 v-html="generateAvatar(authStore.user?.profilePic)"
               ></div>
-              <div v-else class="w-9 h-9 rounded-full bg-canvas flex items-center justify-center border border-border shadow-sm">
-                <User :size="16" class="text-muted" />
+              <div v-else class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-canvas flex items-center justify-center border border-border shadow-sm shrink-0">
+                <User :size="16" class="text-muted w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
             </div>
             <!-- Input -->
@@ -469,7 +469,7 @@ const generateAvatar = (seed) => {
               <textarea 
                 v-model="newComment"
                 placeholder="Viết bình luận..."
-                class="w-full bg-transparent px-1 py-2.5 pr-10 focus:outline-none resize-none max-h-[120px] overflow-y-auto leading-normal text-ink placeholder-muted font-[playfair-display]"
+                class="w-full bg-transparent px-2 py-2 text-[13px] sm:text-sm pr-10 focus:outline-none resize-none max-h-[120px] overflow-y-auto leading-normal text-ink placeholder-muted font-[playfair-display]"
                 rows="1"
                 @keydown.enter.prevent="postComment"
               ></textarea>

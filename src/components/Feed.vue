@@ -125,7 +125,7 @@ const generateAvatar = (seed) => {
 </script>
 
 <template>
-  <div class="container mx-auto p-4 max-w-2xl pt-16 pb-24">
+  <div class="container mx-auto p-3 sm:p-4 max-w-2xl pt-12 sm:pt-16 pb-24">
 
     <div v-if="!isOnline" class="flex flex-col items-center justify-center py-24 text-center">
       <div class="w-16 h-16 bg-canvas border border-border rounded-2xl flex items-center justify-center mb-6 shadow-sm">
@@ -144,13 +144,13 @@ const generateAvatar = (seed) => {
         <p class="text-lg">Ở đây yên tĩnh quá. Hãy là người đầu tiên chia sẻ thành tích!</p>
       </div>
 
-      <TransitionGroup v-else name="list" tag="div" class="flex flex-col gap-12">
+      <TransitionGroup v-else name="list" tag="div" class="flex flex-col gap-8 sm:gap-12">
 
       <div 
         v-for="post in feed" 
         :key="post.id"
         @click="router.push(`/feed/${post.id}`)"
-        class="group flex gap-5 items-start relative pb-12 border-b border-border/50 last:border-0 last:pb-0 cursor-pointer"
+        class="group flex gap-3 sm:gap-5 items-start relative pb-8 sm:pb-12 border-b border-border/50 last:border-0 last:pb-0 cursor-pointer"
       >
         <!-- Avatar -->
         <router-link 
@@ -161,21 +161,21 @@ const generateAvatar = (seed) => {
         >
           <div 
             v-if="generateAvatar(post.profilePic)" 
-            class="w-14 h-14 rounded-[1.25rem] overflow-hidden bg-canvas border border-border ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105"
+            class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-[1.25rem] overflow-hidden bg-canvas border border-border ring-2 sm:ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105"
             v-html="generateAvatar(post.profilePic)"
           ></div>
-          <div v-else class="w-14 h-14 rounded-[1.25rem] bg-canvas flex items-center justify-center border border-border ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105">
-            <User :size="24" class="text-muted" />
+          <div v-else class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-[1.25rem] bg-canvas flex items-center justify-center border border-border ring-2 sm:ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105">
+            <User :size="20" class="text-muted sm:w-6 sm:h-6" />
           </div>
         </router-link>
         <div v-else class="shrink-0">
           <div 
             v-if="generateAvatar(post.profilePic)" 
-            class="w-14 h-14 rounded-[1.25rem] overflow-hidden bg-canvas border border-border ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105"
+            class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-[1.25rem] overflow-hidden bg-canvas border border-border ring-2 sm:ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105"
             v-html="generateAvatar(post.profilePic)"
           ></div>
-          <div v-else class="w-14 h-14 rounded-[1.25rem] bg-canvas flex items-center justify-center border border-border ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105">
-            <User :size="24" class="text-muted" />
+          <div v-else class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-[1.25rem] bg-canvas flex items-center justify-center border border-border ring-2 sm:ring-4 ring-surface shadow-subtle transition-transform group-hover:scale-105">
+            <User :size="20" class="text-muted sm:w-6 sm:h-6" />
           </div>
         </div>
 

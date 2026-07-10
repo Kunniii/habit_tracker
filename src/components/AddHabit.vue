@@ -25,9 +25,9 @@
 </script>
 
 <template>
-  <div class="container mx-auto p-4 max-w-xl pt-12 pb-24">
-    <div class="bg-surface border border-border shadow-subtle rounded-xl p-8">
-      <h1 class="text-4xl font-display tracking-tight font-medium mb-8 text-ink">Thói quen mới</h1>
+  <div class="container mx-auto px-3 sm:px-4 max-w-xl pt-8 sm:pt-12 pb-24">
+    <div class="bg-surface border border-border shadow-subtle rounded-xl p-5 sm:p-8">
+      <h1 class="text-3xl sm:text-4xl font-display tracking-tight font-medium mb-6 sm:mb-8 text-ink">Thói quen mới</h1>
       <form
         @submit.prevent="submitHabit"
         class="space-y-6"
@@ -44,7 +44,7 @@
             v-model="habitName"
             required
             placeholder="VD: Đọc 10 trang sách"
-            class="block w-full px-4 py-3 border border-border rounded-md focus:outline-none bg-canvas text-ink placeholder-muted focus:ring-1 focus:ring-ink focus:border-ink transition-shadow"
+            class="block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm border border-border rounded-md focus:outline-none bg-canvas text-ink placeholder-muted focus:ring-1 focus:ring-ink focus:border-ink transition-shadow"
           />
         </div>
         <div>
@@ -57,7 +57,7 @@
             id="description"
             v-model="habitDescription"
             placeholder="Tại sao bạn muốn xây dựng thói quen này?"
-            class="block w-full h-32 px-4 py-3 border border-border rounded-md focus:outline-none bg-canvas text-ink placeholder-muted focus:ring-1 focus:ring-ink focus:border-ink transition-shadow resize-y"
+            class="block w-full h-32 px-3 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm border border-border rounded-md focus:outline-none bg-canvas text-ink placeholder-muted focus:ring-1 focus:ring-ink focus:border-ink transition-shadow resize-y"
           ></textarea>
         </div>
         <div class="flex gap-4 pt-4">

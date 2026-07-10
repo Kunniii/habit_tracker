@@ -79,8 +79,8 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-64px)] flex items-center justify-center p-6 bg-canvas">
-    <div class="w-full max-w-[400px] bg-surface border border-border p-8 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+  <div class="min-h-[calc(100vh-64px)] flex items-center justify-center p-3 sm:p-6 bg-canvas">
+    <div class="w-full max-w-[400px] bg-surface border border-border p-5 sm:p-8 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
       
       <!-- Brand & Header -->
       <div class="flex flex-col items-center mb-8 text-center">
@@ -104,7 +104,7 @@ const handleSubmit = async () => {
           <input 
             v-model="displayName" 
             type="text" 
-            class="w-full px-3 py-2.5 bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-[16px] sm:text-sm bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
             placeholder="Tên của bạn"
           />
         </div>
@@ -119,7 +119,7 @@ const handleSubmit = async () => {
               v-model="username" 
               @input="username = username.toLowerCase()"
               type="text" 
-              class="w-full pl-8 pr-3 py-2.5 bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
+              class="w-full pl-8 pr-3 py-2 sm:py-2.5 text-[16px] sm:text-sm bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
               placeholder="username"
               autocomplete="username"
             />
@@ -133,7 +133,7 @@ const handleSubmit = async () => {
           <input 
             v-model="password" 
             type="password" 
-            class="w-full px-3 py-2.5 bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-[16px] sm:text-sm bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
             placeholder="••••••••"
             :autocomplete="isLogin ? 'current-password' : 'new-password'"
           />
@@ -146,7 +146,7 @@ const handleSubmit = async () => {
           <input 
             v-model="confirmPassword" 
             type="password" 
-            class="w-full px-3 py-2.5 bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-[16px] sm:text-sm bg-background border border-border rounded-md text-ink placeholder-muted focus:outline-none focus:border-ink transition-colors"
             placeholder="••••••••"
             autocomplete="new-password"
           />

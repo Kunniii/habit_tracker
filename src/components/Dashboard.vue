@@ -10,9 +10,9 @@
 </script>
 
 <template>
-  <div class="container mx-auto p-4 max-w-5xl pt-12 pb-24">
+  <div class="container mx-auto px-3 sm:px-4 max-w-5xl pt-8 sm:pt-12 pb-24">
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       <HabitCard
         v-for="habit in habits"
         :key="habit.id"
