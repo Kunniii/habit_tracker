@@ -125,7 +125,7 @@ const generateAvatar = (seed) => {
 </script>
 
 <template>
-  <div class="container mx-auto p-3 sm:p-4 max-w-2xl pt-12 sm:pt-16 pb-24">
+  <div class="container mx-auto p-3 sm:p-4 max-w-2xl pt-12 sm:pt-16 pb-24 sm:pb-24">
 
     <div v-if="!isOnline" class="flex flex-col items-center justify-center py-24 text-center">
       <div class="w-16 h-16 bg-canvas border border-border rounded-2xl flex items-center justify-center mb-6 shadow-sm">

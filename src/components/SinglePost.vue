@@ -449,7 +449,7 @@ const generateAvatar = (seed) => {
       </div>
 
       <!-- Bottom Fixed Area (Comment Form) -->
-      <div v-if="post" class="flex-none p-3 sm:p-4 pb-24 shrink-0 bg-transparent z-10 relative">
+      <div v-if="post" class="flex-none p-3 sm:p-4 pb-24 sm:pb-24 shrink-0 bg-transparent z-10 relative">
         <div class="max-w-[800px] mx-auto w-full">
           <!-- Auth form -->
           <div v-if="!!authStore.token" class="flex gap-2 sm:gap-3 p-1.5 sm:p-2 bg-surface/80 backdrop-blur-xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] rounded-[2rem] items-center">
