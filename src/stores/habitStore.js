@@ -33,8 +33,21 @@ export const useHabitStore = defineStore("habit", {
         this.autoSync();
       }
     },
-    deleteHabit(id) {
+    async deleteHabit(id) {
       this.habits = this.habits.filter((h) => h.id !== id);
+      
+      const auth = useAuthStore();
+      if (auth.token) {
+        try {
+          await fetch(`/api/habits/${id}`, {
+            method: 'DELETE',
+            headers: this.getHeaders()
+          });
+        } catch(e) {
+          console.error('Delete failed:', e);
+        }
+      }
+      
       this.autoSync();
     },
     markHabitAsDone(id, date) {
