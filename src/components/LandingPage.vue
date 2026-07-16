@@ -1,5 +1,5 @@
 <script setup>
-  import { Activity, Users, Flame, LayoutTemplate, Lock } from "lucide-vue-next";
+  import { Activity, Users, Flame, LayoutTemplate, Lock, Calendar } from "lucide-vue-next";
 </script>
 
 <template>
@@ -46,8 +46,66 @@
       </div>
     </section>
 
-    <!-- Bento Grid Features Section -->
+    <!-- Deep Dive Features -->
     <section class="py-24 bg-surface border-t border-border">
+      <div class="container mx-auto px-6 max-w-5xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+          <div class="order-2 md:order-1">
+            <img src="../assets/feature_track_habit.png" alt="Theo dõi chuỗi ngày" class="w-full rounded-2xl shadow-subtle border border-border bg-surface" />
+          </div>
+          <div class="order-1 md:order-2">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent-red-bg text-accent-red-text mb-6">
+              <Activity :size="24" />
+            </div>
+            <h2 class="text-3xl md:text-4xl font-display font-medium tracking-tight mb-4">Mọi nỗ lực đều được ghi nhận</h2>
+            <p class="text-lg text-muted mb-8 leading-relaxed">
+              Theo dõi chuỗi ngày liên tiếp của bạn với giao diện trực quan, sạch sẽ. Nhìn thấy chuỗi ngày dài dần ra chính là động lực lớn nhất để bạn duy trì sự kiên định mỗi ngày.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-canvas border-t border-border">
+      <div class="container mx-auto px-6 max-w-5xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+          <div>
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent-blue-bg text-accent-blue-text mb-6">
+              <Users :size="24" />
+            </div>
+            <h2 class="text-3xl md:text-4xl font-display font-medium tracking-tight mb-4">Cùng nhau tiến bộ</h2>
+            <p class="text-lg text-muted mb-8 leading-relaxed">
+              Chia sẻ những cột mốc quan trọng của bạn với cộng đồng. Nhận được sự khích lệ và truyền cảm hứng từ những người có cùng mục tiêu phát triển bản thân.
+            </p>
+          </div>
+          <div>
+            <img src="../assets/feature_cong_dong.png" alt="Cộng đồng" class="w-full rounded-2xl shadow-subtle border border-border bg-canvas" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-surface border-t border-border">
+      <div class="container mx-auto px-6 max-w-5xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+          <div class="order-2 md:order-1">
+            <img src="../assets/feature_calendar.png" alt="Theo dõi chuỗi trực quan" class="w-full rounded-2xl shadow-subtle border border-border bg-canvas" />
+          </div>
+          <div class="order-1 md:order-2">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent-green-bg text-accent-green-text mb-6">
+              <Calendar :size="24" />
+            </div>
+            <h2 class="text-3xl md:text-4xl font-display font-medium tracking-tight mb-4">Nhìn lại hành trình</h2>
+            <p class="text-lg text-muted mb-8 leading-relaxed">
+              Theo dõi chuỗi trực quan bằng lịch sử đánh dấu theo ngày. Cảm nhận sự tự hào khi nhìn thấy bản đồ thói quen của bạn được lấp đầy dần theo thời gian.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bento Grid Features Section -->
+    <section class="py-24 bg-canvas border-t border-border">
       <div class="container mx-auto px-6 max-w-5xl">
         <h2 class="text-4xl md:text-5xl font-display font-medium tracking-tight mb-12">Giúp bạn giữ vững thói quen mỗi ngày.</h2>
         
