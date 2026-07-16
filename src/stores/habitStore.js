@@ -24,15 +24,18 @@ export const useHabitStore = defineStore("habit", {
     // LOCAL FIRST CRUD
     addHabit(habit) {
       this.habits.push(habit);
+      this.autoSync();
     },
     updateHabit(id, updatedHabit) {
       const index = this.habits.findIndex((h) => h.id === id);
       if (index !== -1) {
         this.habits[index] = updatedHabit;
+        this.autoSync();
       }
     },
     deleteHabit(id) {
       this.habits = this.habits.filter((h) => h.id !== id);
+      this.autoSync();
     },
     markHabitAsDone(id, date) {
       const habit = this.habits.find((h) => h.id === id);
@@ -40,6 +43,7 @@ export const useHabitStore = defineStore("habit", {
         if (!habit.datesDone) habit.datesDone = [];
         if (!habit.datesDone.includes(date)) {
            habit.datesDone.push(date);
+           this.autoSync();
         }
       }
     },
@@ -84,6 +88,25 @@ export const useHabitStore = defineStore("habit", {
     },
 
     // SYNC
+    async autoSync() {
+      const auth = useAuthStore();
+      if (!auth.token) return;
+
+      try {
+        const res = await fetch('/api/habits/sync', {
+          method: 'POST',
+          headers: this.getHeaders(),
+          body: JSON.stringify(this.habits)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          this.habits = data;
+        }
+      } catch (e) {
+        console.error('Auto sync failed:', e);
+      }
+    },
     async syncHabits() {
       this.isLoading = true;
       this.error = null;

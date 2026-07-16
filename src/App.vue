@@ -3,7 +3,7 @@
   import BottomNav from "./components/BottomNav.vue";
   import { Toaster, toast } from 'vue-sonner';
   import { useNetwork } from '@vueuse/core';
-  import { watch } from 'vue';
+  import { watch, onMounted } from 'vue';
   import { useHabitStore } from './stores/habitStore';
   import { useAuthStore } from './stores/auth';
 
@@ -21,6 +21,13 @@
       } catch (e) {
         toast.error('Đồng bộ thất bại: ' + e.message);
       }
+    }
+  });
+
+  onMounted(() => {
+    // Tự động đồng bộ khi tải ứng dụng nếu đã đăng nhập
+    if (authStore.token) {
+      habitStore.autoSync();
     }
   });
 </script>
